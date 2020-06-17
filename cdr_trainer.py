@@ -7,6 +7,7 @@ from data_loaders.cdr_dataset import make_cdr_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
+import torch.optim as optim
 
 
 
@@ -124,7 +125,7 @@ def train(num_epochs=30):
             evaluate(net, test_loader, tokenizer)
 
     optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.1}])
-    scheduler = StepLR(optimizer, step_size=1, gamma=0.1)
+    scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
         print('Epoch:', epoch,'LR:', scheduler.get_lr())
         do_eval = False
