@@ -35,7 +35,8 @@ def evaluate(net, test_loader, tokenizer):
             attention_mask = attention_mask.cuda()
             token_type_ids = token_type_ids.cuda()
         
-        prediction = net(x, token_type_ids=token_type_ids, attention_masks=attention_mask,
+        prediction = net(x, token_type_ids=token_type_ids, 
+                                # attention_masks=attention_mask,
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
                                   chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs)
         prediction.to('cpu')
@@ -49,9 +50,9 @@ def evaluate(net, test_loader, tokenizer):
         new_all_labels += labels[i].tolist()
         new_all_preds += preds[i].tolist()
     
-    labels = torch.cat(labels, dim=-1)
-    preds = torch.cat(preds, dim=-1)
-    print("report: ", classification_report(labels, preds))
+    # labels = torch.cat(labels, dim=-1)
+    # preds = torch.cat(preds, dim=-1)
+    print("report: ", classification_report(new_all_labels, new_all_preds))
 
 
 def train(num_epochs=4):
