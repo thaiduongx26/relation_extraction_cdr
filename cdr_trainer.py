@@ -92,16 +92,21 @@ def train(num_epochs=4):
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
-            print('all_labels: ', all_labels)
-            print('all_preds: ', all_preds)
+            # print('all_labels: ', all_labels)
+            # print('all_preds: ', all_preds)
             epoch_loss += loss
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
         average_loss = epoch_loss / i
-        
+        new_all_labels = []
+        new_all_preds = []
+        for i in range(len(all_labels)):
+            new_all_labels += all_labels[i].tolist()
+            new_all_preds += all_preds[i].tolist()
+
         print("average RE loss : ", average_loss)
-        print("train_cls report: ", classification_report(torch.cat(all_labels, dim=-1), torch.cat(all_preds, dim=-1)))
+        print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
         evaluate(net, test_loader, tokenizer)
 
     for epoch in range(num_epochs):
