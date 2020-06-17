@@ -8,7 +8,6 @@ from operator import itemgetter
 from utils.trainer_utils import get_tokenizer
 from utils.utils import TRAINING_PATH, TESTING_PATH
 from utils.text_utils import check_sentence_contain_entities
-# from sklearn import preprocessing
 from data_loaders.sequence_padding import PadSequenceCDRDataset
 
 
@@ -70,6 +69,7 @@ class CDR_Sample():
         return codes
 
     def make_example(self, use_entity_token: bool = True):
+        from sklearn import preprocessing
         final_sample = []
         masked_entities = []
         text = self.text
