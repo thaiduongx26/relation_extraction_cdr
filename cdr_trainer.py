@@ -2,7 +2,7 @@ from torch import nn
 import torch
 from typing import *
 
-from models.huggingface_models.modeling_electra import ElectraModel
+from models.electra_model import ElectraModelClassification
 from data_loaders.cdr_dataset import make_cdr_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
@@ -55,7 +55,7 @@ def train(num_epochs=4):
     test_loader = make_cdr_dataset('data/cdr/CDR_TestSet.PubTator.txt')
 
     tokenizer = get_tokenizer()
-    net = ElectraModel.from_pretrained('google/electra-small-discriminator')
+    net = ElectraModelClassification.from_pretrained('google/electra-small-discriminator')
 
     if cuda:
         net.cuda()
