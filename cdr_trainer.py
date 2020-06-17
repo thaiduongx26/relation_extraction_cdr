@@ -107,6 +107,7 @@ def train(num_epochs=30):
             loss.backward()
             optimizer.zero_grad()
             optimizer.step()
+        scheduler.step()
             
         average_loss = epoch_loss / i
         new_all_labels = []
@@ -124,8 +125,7 @@ def train(num_epochs=30):
     optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.1}])
     scheduler = StepLR(optimizer, step_size=1, gamma=0.1)
     for epoch in range(num_epochs):
-        print("EPOCH: ", epoch)
-        scheduler.step()
+        print('Epoch:', epoch,'LR:', scheduler.get_lr())
         do_eval = False
         if epoch % 5 == 0:
             do_eval = True
