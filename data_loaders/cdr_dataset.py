@@ -8,7 +8,7 @@ from operator import itemgetter
 from utils.trainer_utils import get_tokenizer
 from utils.utils import TRAINING_PATH, TESTING_PATH
 from utils.text_utils import check_sentence_contain_entities
-from sklearn import preprocessing
+# from sklearn import preprocessing
 from data_loaders.sequence_padding import PadSequenceCDRDataset
 
 
