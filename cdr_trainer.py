@@ -11,8 +11,9 @@ from utils.trainer_utils import get_tokenizer
 
 import os
 
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+# os.environ["CUDA_VISIBLE_DEVICES"]="0,1,2,3"
 cuda = torch.cuda.is_available()
+torch.cuda.set_device(1)
 print('cuda is_available: ', cuda)
 
 
