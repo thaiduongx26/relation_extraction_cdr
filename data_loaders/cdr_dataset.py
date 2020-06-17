@@ -160,7 +160,7 @@ def gen_samples(data_text_raw):
 
 
 
-def make_cdr_dataset(path, batch_size=64, shuffle=True, num_workers=0):
+def make_cdr_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     data = []
     tokenizer = get_tokenizer()
     count = 0
