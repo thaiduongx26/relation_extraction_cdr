@@ -1,0 +1,18 @@
+{
+  "train_file": "data/cdr/CDR_TrainingSet.PubTator.txt",
+  "test_file": "data/cdr/CDR_TestSet.PubTator.txt",
+  "num_epochs": 500,
+  "model_config": {
+    "vocab_size": 20000,
+    "embedding_hidden_size": 256,
+    "max_position": 512,
+    "position_size": 64,
+    "num_type": 3,
+    "type_size": 64,
+    "hidden_size": 384,
+    "num_attention_heads": 4,
+    "dropout": 0.5,
+    "num_encoder": 2,
+    "num_ner_label": 5
+  }
+}
