@@ -105,8 +105,9 @@ def train(num_epochs=30):
             # print('all_preds: ', all_preds)
             epoch_loss += loss
             loss.backward()
-            optimizer.zero_grad()
             optimizer.step()
+            optimizer.zero_grad()
+            
         scheduler.step()
             
         average_loss = epoch_loss / i
