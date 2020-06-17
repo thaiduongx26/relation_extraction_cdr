@@ -200,7 +200,7 @@ class ElectraModelClassification(ElectraPreTrainedModel):
         
         def get_entity_embedding(token_embedding, masked_entities, code):
             count = 0
-            embedding = torch.zeros(token_embedding.shape[1])
+            embedding = torch.zeros(token_embedding.shape[1]).cuda()
             for i, mask in enumerate(masked_entities):
                 if mask == code:
                     count += 1
