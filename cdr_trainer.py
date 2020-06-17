@@ -70,7 +70,7 @@ def train(num_epochs=4):
 
     pad_id = tokenizer.pad_token_id
 
-    def train_model(optimizer=None, tokenizer=None):
+    def train_model(optimizer=None, tokenizer=None, do_eval=False):
         net.train()
         epoch_loss = 0
         all_labels = []
@@ -113,12 +113,17 @@ def train(num_epochs=4):
 
         print("average RE loss : ", average_loss)
         print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
-        evaluate(net, test_loader, tokenizer)
+        if do_eval:
+            evaluate(net, test_loader, tokenizer)
 
     for epoch in range(num_epochs):
         print("EPOCH: ", epoch)
         optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.0001}])
-        train_model(optimizer=optimizer, tokenizer=tokenizer)
+        do_eval = False
+        if epoch % 5 == 0:
+            do_eval = True
+        train_model(optimizer=optimizer, tokenizer=tokenizer, do_eval=do_eval)
+
 
 
 if __name__ == '__main__':
