@@ -8,7 +8,7 @@ from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
 import torch.optim as optim
-
+from optim import optim4GPU
 
 
 import os
@@ -107,8 +107,9 @@ def train(num_epochs=100):
             # print('all_preds: ', all_preds)
             epoch_loss += loss
             loss.backward()
-            optimizer.step()
             optimizer.zero_grad()
+            optimizer.step()
+            
             
         # scheduler.step()
             
@@ -125,7 +126,8 @@ def train(num_epochs=100):
         if do_eval:
             evaluate(net, test_loader, tokenizer)
 
-    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    optimizer = optim4GPU(net)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
