@@ -71,7 +71,7 @@ def train(num_epochs=4):
         all_preds = []
         for i, batch in tqdm(enumerate(train_loader)):
             x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
-            print('label = ', label)
+            # print('label = ', label)
             # label = torch.squeeze(label, 1)
             attention_mask = (x != pad_id).float()
             attention_mask = (1. - attention_mask) * -10000.
@@ -92,7 +92,8 @@ def train(num_epochs=4):
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
-            
+            print('all_labels: ', all_labels)
+            print('all_preds: ', all_preds)
             epoch_loss += loss
             loss.backward()
             optimizer.step()
