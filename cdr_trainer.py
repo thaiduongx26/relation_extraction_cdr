@@ -2,7 +2,7 @@ from torch import nn
 import torch
 from typing import *
 
-from models.electra_model import ElectraModelClassification
+from models.huggingface_models.modeling_electra import ElectraModel
 from data_loaders.cdr_dataset import make_cdr_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
@@ -49,13 +49,13 @@ def evaluate(net, test_loader, tokenizer):
     print("report: ", classification_report(labels, preds))
 
 
-def train(num_epochs=30):
+def train(num_epochs=4):
 
     train_loader = make_cdr_dataset('data/cdr/CDR_TrainingSet.PubTator.txt')
     test_loader = make_cdr_dataset('data/cdr/CDR_TestSet.PubTator.txt')
 
     tokenizer = get_tokenizer()
-    net = ElectraModelClassification.from_pretrained('google/electra-small-discriminator')
+    net = ElectraModel.from_pretrained('google/electra-small-discriminator')
 
     if cuda:
         net.cuda()
