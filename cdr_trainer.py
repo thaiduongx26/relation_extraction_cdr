@@ -66,7 +66,8 @@ def train(num_epochs=30):
 
     tokenizer = get_tokenizer()
     net = ElectraModelClassification.from_pretrained('google/electra-small-discriminator')
-
+    for name, param in net.named_parameters():
+        print("name: {}, unfrozen:{}".format(name, param.requires_grad))
     if cuda:
         net.cuda()
 
