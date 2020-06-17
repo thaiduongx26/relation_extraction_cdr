@@ -11,9 +11,9 @@ from sklearn.metrics import classification_report
 
 import os
 
-
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 cuda = torch.cuda.is_available()
-
+print('cuda is_available: ', cuda)
 
 
 def evaluate(net, test_loader, tokenizer):
@@ -55,7 +55,7 @@ def evaluate(net, test_loader, tokenizer):
     print("report: ", classification_report(new_all_labels, new_all_preds))
 
 
-def train(num_epochs=4):
+def train(num_epochs=30):
 
     train_loader = make_cdr_dataset('data/cdr/CDR_TrainingSet.PubTator.txt')
     test_loader = make_cdr_dataset('data/cdr/CDR_TestSet.PubTator.txt')
