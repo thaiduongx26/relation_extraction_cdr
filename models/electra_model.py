@@ -223,5 +223,7 @@ class ElectraModelClassification(ElectraPreTrainedModel):
                 entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
                 print(entity_embedding.shape)
                 batch_embedding.append(entity_embedding)
-        output = self.projection(torch.tensor(batch_embedding))
+        batch_embedding = torch.tensor(batch_embedding)
+        print('batch_embedding shape: ', batch_embedding)
+        output = self.projection(batch_embedding)
         return output
