@@ -7,7 +7,7 @@ from data_loaders.cdr_dataset import make_cdr_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 
-from sklearn.metrics import classification_report
+
 
 import os
 
@@ -52,6 +52,7 @@ def evaluate(net, test_loader, tokenizer):
     
     # labels = torch.cat(labels, dim=-1)
     # preds = torch.cat(preds, dim=-1)
+    from sklearn.metrics import classification_report
     print("report: ", classification_report(new_all_labels, new_all_preds))
 
 
@@ -111,6 +112,7 @@ def train(num_epochs=30):
             new_all_labels += all_labels[i].tolist()
             new_all_preds += all_preds[i].tolist()
 
+        from sklearn.metrics import classification_report
         print("average RE loss : ", average_loss)
         print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
         if do_eval:
