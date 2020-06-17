@@ -170,7 +170,7 @@ def make_cdr_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     for text_block in data_raw_sample:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         count += sample.check_distance_CA()
-        final_sample, text_tokenized = sample.make_example()
+        final_sample, text_tokenized = sample.make_example(use_entity_token=False)
         if len(text_tokenized) <= 512:
             data += final_sample
     PS = PadSequenceCDRDataset(token_pad_value=tokenizer.pad_token_id)
