@@ -6,6 +6,7 @@ from models.electra_model import ElectraModelClassification
 from data_loaders.cdr_dataset import make_cdr_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
+from torch.optim.lr_scheduler import StepLR
 
 
 
@@ -72,7 +73,7 @@ def train(num_epochs=30):
 
     pad_id = tokenizer.pad_token_id
 
-    def train_model(optimizer=None, tokenizer=None, do_eval=False):
+    def train_model(optimizer=None, scheduler=None, tokenizer=None, do_eval=False):
         net.train()
         epoch_loss = 0
         all_labels = []
@@ -104,8 +105,9 @@ def train(num_epochs=30):
             # print('all_preds: ', all_preds)
             epoch_loss += loss
             loss.backward()
-            optimizer.step()
             optimizer.zero_grad()
+            optimizer.step()
+            
         average_loss = epoch_loss / i
         new_all_labels = []
         new_all_preds = []
@@ -119,13 +121,15 @@ def train(num_epochs=30):
         if do_eval:
             evaluate(net, test_loader, tokenizer)
 
+    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.1}])
+    scheduler = StepLR(optimizer, step_size=1, gamma=0.1)
     for epoch in range(num_epochs):
         print("EPOCH: ", epoch)
-        optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.0001}])
+        scheduler.step()
         do_eval = False
         if epoch % 5 == 0:
             do_eval = True
-        train_model(optimizer=optimizer, tokenizer=tokenizer, do_eval=do_eval)
+        train_model(optimizer=optimizer, scheduler=scheduler, tokenizer=tokenizer, do_eval=do_eval)
 
 
 
