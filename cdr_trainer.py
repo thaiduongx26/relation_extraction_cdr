@@ -21,12 +21,10 @@ def evaluate(net, test_loader, tokenizer):
     pad_id = tokenizer.pad_token_id
     labels = []
     preds = []
-    ner_preds = []
-    ner_labels = []
 
     for i, batch in tqdm(enumerate(test_loader)):
         x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
-        label = torch.squeeze(label, 1).to('cpu')
+        # label = torch.squeeze(label, 1).to('cpu')
         label = label.data
         labels.append(label)
         attention_mask = (x != pad_id).float()
@@ -44,6 +42,13 @@ def evaluate(net, test_loader, tokenizer):
         pred_label = prediction.argmax(dim=1).to('cpu')
         
         preds.append(pred_label)
+    
+    new_all_labels = []
+    new_all_preds = []
+    for i in range(len(labels)):
+        new_all_labels += labels[i].tolist()
+        new_all_preds += preds[i].tolist()
+    
     labels = torch.cat(labels, dim=-1)
     preds = torch.cat(preds, dim=-1)
     print("report: ", classification_report(labels, preds))
