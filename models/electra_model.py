@@ -218,6 +218,8 @@ class ElectraModelClassification(ElectraPreTrainedModel):
                 token_embedding = token_embedding_output[i]
                 chemical_embedding = get_entity_embedding(token_embedding, masked_entities, chemical_code)
                 disease_embedding = get_entity_embedding(token_embedding, masked_entities, disease_code)
+                print('chemical_embedding shape: ', chemical_embedding)
+                print('disease_embedding shape: ', disease_embedding)
                 entity_embedding = torch.cat((chemical_embedding, disease_embedding), 1)
                 print(entity_embedding.shape)
                 batch_embedding.append(entity_embedding)
