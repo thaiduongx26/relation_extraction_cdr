@@ -94,8 +94,9 @@ class ElectraModelClassification(ElectraPreTrainedModel):
 
         if config.embedding_size != config.hidden_size:
             self.embeddings_project = nn.Linear(config.embedding_size, config.hidden_size)
-        self.projection = nn.Linear(512, 2)
         self.encoder = BertEncoder(config)
+        self.projection = nn.Linear(512, 2)
+        1/0
         self.config = config
         self.init_weights()
 
