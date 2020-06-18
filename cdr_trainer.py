@@ -132,8 +132,8 @@ def train(num_epochs=100):
 
     # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
     optimizer = optim.Adam([
-        {'params': net.features.parameters()},
-        {'params': net.classifier.parameters(), 'weight_decay': 0.1}
+        {'params': net.encoder.parameters()},
+        {'params': net.projection.parameters(), 'weight_decay': 0.1}
     ], lr=0.001)
     # optimizer = optim4GPU(net)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
