@@ -193,7 +193,7 @@ class ElectraModelClassification(ElectraPreTrainedModel):
             hidden_states,
             attention_mask=extended_attention_mask,
             head_mask=head_mask,
-            output_attentions=output_attentions,
+            # output_attentions=output_attentions,
         )
 
         batch_size = chemical_code_list.shape[0]
