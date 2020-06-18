@@ -69,8 +69,12 @@ def train(num_epochs=100):
     electra_config = ElectraConfig()
 
     net = ElectraModelClassification.from_pretrained('google/electra-small-discriminator')
+    summary(net)
     # for name, param in net.named_parameters():
     #     print("name: {}, unfrozen:{}".format(name, param.requires_grad))
+    # for layer in net:
+    #     x = layer(x)
+    #     print(x.size())
     if cuda:
         net.cuda()
 
