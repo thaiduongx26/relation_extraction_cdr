@@ -74,7 +74,7 @@ def train(num_epochs=100):
     # for param in net.
     for name, param in net.named_parameters():
         if 'encoder' in name:
-            param.requires_grad = False
+            # param.requires_grad = False
         print("name: {}, unfrozen:{}, size: {}".format(name, param.requires_grad, param.size()))
     # for layer in net:
     #     x = layer(x)
