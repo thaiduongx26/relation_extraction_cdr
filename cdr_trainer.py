@@ -68,8 +68,8 @@ def train(num_epochs=100):
 
     tokenizer = get_tokenizer()
     electra_config = ElectraConfig()
-    net = ElectraModelClassification(electra_config)
-    # net = net.from_pretrained('google/electra-small-discriminator')
+    # net = ElectraModelClassification(electra_config)
+    net = net.from_pretrained('google/electra-small-discriminator')
     # summary(net)
     # for param in net.
     for name, param in net.named_parameters():
@@ -103,7 +103,7 @@ def train(num_epochs=100):
                 label = label.cuda()
                 attention_mask = attention_mask.cuda()
                 token_type_ids = token_type_ids.cuda()
-                
+
             prediction = net(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
@@ -139,12 +139,12 @@ def train(num_epochs=100):
         if do_eval:
             evaluate(net, test_loader, tokenizer)
 
-    # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
     # optimizer = optim.Adam([
     #     {'params': net.encoder.parameters()},
     #     {'params': net.projection.parameters(), 'weight_decay': 0.1}
     # ], lr=0.1)
-    optimizer = optim.SGD(net.parameters(), lr=0.05)
+    # optimizer = optim.SGD(net.parameters(), lr=0.05)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
