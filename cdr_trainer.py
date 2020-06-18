@@ -106,6 +106,7 @@ def train(num_epochs=100):
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
                                   chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs)
             
+            probs = nn.Softmax(dim=1)
             loss = criteria(prediction, label)
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
@@ -113,8 +114,8 @@ def train(num_epochs=100):
             # print('all_labels: ', all_labels)
             # print('all_preds: ', all_preds)
             epoch_loss += loss
-            loss.backward()
             optimizer.zero_grad()
+            loss.backward()
             optimizer.step()
             
             
