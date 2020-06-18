@@ -8,7 +8,7 @@ from torch.nn import CrossEntropyLoss, MSELoss
 
 from transformers import ElectraModel, ElectraConfig
 from transformers.modeling_electra import ElectraEmbeddings, ElectraPreTrainedModel
-from modeling_bert import BertEncoder
+from transformers.modeling_bert import BertEncoder
 
 ELECTRA_START_DOCSTRING = r"""
     This model is a PyTorch `torch.nn.Module <https://pytorch.org/docs/stable/nn.html#torch.nn.Module>`_ sub-class.
