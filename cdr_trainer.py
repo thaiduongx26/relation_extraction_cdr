@@ -4,7 +4,7 @@ from typing import *
 
 from models.electra_model import ElectraModelClassification
 from transformers import ElectraConfig
-from data_loaders.cdr_dataset import make_cdr_dataset
+from data_loaders.cdr_dataset import make_cdr_dataset, make_cdr_train_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
