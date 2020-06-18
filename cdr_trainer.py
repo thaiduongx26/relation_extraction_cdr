@@ -120,8 +120,9 @@ def train(num_epochs=100):
             optimizer.step()
 
             epoch_loss += loss
-
-            print("learned A = {}".format(list(net.parameters())[14].data[0]))
+            
+            print('learned = {}'.format(unet.projection.weight.data))
+            # print("learned A = {}".format(list(net.parameters())[14].data[0]))
             # print("learned b = {}".format(list(net.parameters())[1].data[0]))
 
         # scheduler.step()
