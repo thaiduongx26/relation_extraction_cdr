@@ -82,7 +82,7 @@ def train(num_epochs=100):
     if cuda:
         net.cuda()
 
-    criteria = torch.nn.CrossEntropyLoss()
+    criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.pad_token_id)
 
     pad_id = tokenizer.pad_token_id
 
@@ -140,10 +140,7 @@ def train(num_epochs=100):
             evaluate(net, test_loader, tokenizer)
 
     optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
-    # optimizer = optim.Adam([
-    #     {'params': net.encoder.parameters()},
-    #     {'params': net.projection.parameters(), 'weight_decay': 0.1}
-    # ], lr=0.1)
+    
     # optimizer = optim.SGD(net.parameters(), lr=0.05)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
