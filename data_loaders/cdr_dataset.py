@@ -163,7 +163,7 @@ def gen_samples(data_text_raw):
 def make_cdr_train_dataset(train_path, dev_path, batch_size=16, shuffle=True, num_workers=0):
     data = []
     tokenizer = get_tokenizer()
-    count = 0
+    # count = 0
     with open(train_path, 'r') as f:
         raw_data_train = f.readlines()
     with open(dev_path, 'r') as f:
@@ -172,13 +172,13 @@ def make_cdr_train_dataset(train_path, dev_path, batch_size=16, shuffle=True, nu
     data_raw_sample_dev = gen_samples(raw_data_dev)
     for text_block in data_raw_sample_train:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
-        count += sample.check_distance_CA()
+        # count += sample.check_distance_CA()
         final_sample, text_tokenized = sample.make_example(use_entity_token=False)
         if len(text_tokenized) <= 512:
             data += final_sample
     for text_block in data_raw_sample_dev:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
-        count += sample.check_distance_CA()
+        # count += sample.check_distance_CA()
         final_sample, text_tokenized = sample.make_example(use_entity_token=False)
         if len(text_tokenized) <= 512:
             data += final_sample
@@ -191,13 +191,13 @@ def make_cdr_train_dataset(train_path, dev_path, batch_size=16, shuffle=True, nu
 def make_cdr_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     data = []
     tokenizer = get_tokenizer()
-    count = 0
+    # count = 0
     with open(path, 'r') as f:
         raw_data = f.readlines()
     data_raw_sample = gen_samples(raw_data)
     for text_block in data_raw_sample:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
-        count += sample.check_distance_CA()
+        # count += sample.check_distance_CA()
         final_sample, text_tokenized = sample.make_example(use_entity_token=False)
         if len(text_tokenized) <= 512:
             data += final_sample
