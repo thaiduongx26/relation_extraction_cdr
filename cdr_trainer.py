@@ -101,6 +101,8 @@ def train(num_epochs=100):
                 attention_mask = attention_mask.cuda()
                 token_type_ids = token_type_ids.cuda()
 
+            optimizer.zero_grad()
+
             prediction = net(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
@@ -110,10 +112,11 @@ def train(num_epochs=100):
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
-            epoch_loss += loss
-            optimizer.zero_grad()
+            
             loss.backward()
             optimizer.step()
+
+            epoch_loss += loss.item()
 
         # scheduler.step()
             
@@ -134,7 +137,7 @@ def train(num_epochs=100):
     optimizer = optim.Adam([
         {'params': net.encoder.parameters()},
         {'params': net.projection.parameters(), 'weight_decay': 0.1}
-    ], lr=0.001)
+    ], lr=0.1)
     # optimizer = optim4GPU(net)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
