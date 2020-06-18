@@ -215,18 +215,18 @@ class ElectraModelClassification(ElectraPreTrainedModel):
             embedding = embedding / count
             return embedding
 
-        def get_entity_token_embedding(token_embedding, masked_entities, code):
-            count = 0
-            embedding = torch.zeros(token_embedding.shape[1]).cuda()
-            check = True
-            for i, mask in enumerate(masked_entities):
-                if mask == code and check:
-                    count += 1
-                    embedding += token_embedding[i]
-                else:
-                    if 
-            # embedding = embedding / count
-            return embedding
+        # def get_entity_token_embedding(token_embedding, masked_entities, code):
+        #     count = 0
+        #     embedding = torch.zeros(token_embedding.shape[1]).cuda()
+        #     check = True
+        #     for i, mask in enumerate(masked_entities):
+        #         if mask == code and check:
+        #             count += 1
+        #             embedding += token_embedding[i]
+        #         else:
+        #             if 
+        #     # embedding = embedding / count
+        #     return embedding
 
         batch_embedding = []
 
