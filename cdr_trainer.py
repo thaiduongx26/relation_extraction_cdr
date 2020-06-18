@@ -103,9 +103,7 @@ def train(num_epochs=100):
                 label = label.cuda()
                 attention_mask = attention_mask.cuda()
                 token_type_ids = token_type_ids.cuda()
-
-            optimizer.zero_grad()
-
+                
             prediction = net(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
@@ -118,6 +116,7 @@ def train(num_epochs=100):
             
             loss.backward()
             optimizer.step()
+            optimizer.zero_grad()
 
             epoch_loss += loss
             
