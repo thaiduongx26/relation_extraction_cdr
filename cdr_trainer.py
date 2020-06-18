@@ -68,8 +68,8 @@ def train(num_epochs=100):
 
     tokenizer = get_tokenizer()
     electra_config = ElectraConfig()
-
-    net = ElectraModelClassification.from_pretrained('google/electra-small-discriminator')
+    net = ElectraModelClassification(electra_config)
+    # net = net.from_pretrained('google/electra-small-discriminator')
     # summary(net)
     for name, param in net.named_parameters():
         print("name: {}, unfrozen:{}, size: {}".format(name, param.requires_grad, param.size()))
