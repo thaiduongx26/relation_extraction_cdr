@@ -71,8 +71,8 @@ def train(num_epochs=100):
 
     net = ElectraModelClassification.from_pretrained('google/electra-small-discriminator')
     summary(net)
-    # for name, param in net.named_parameters():
-    #     print("name: {}, unfrozen:{}".format(name, param.requires_grad))
+    for name, param in net.named_parameters():
+        print("name: {}, unfrozen:{}, size: {}".format(name, param.requires_grad, param.size()))
     # for layer in net:
     #     x = layer(x)
     #     print(x.size())
