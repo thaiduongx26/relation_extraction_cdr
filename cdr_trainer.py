@@ -122,7 +122,7 @@ def train(num_epochs=100):
             epoch_loss += loss
 
             print("learned A = {}".format(list(net.parameters())[0].data[0, 0]))
-            print("learned b = {}".format(list(net.parameters())[1].data[0]))
+            # print("learned b = {}".format(list(net.parameters())[1].data[0]))
 
         # scheduler.step()
             
@@ -140,11 +140,11 @@ def train(num_epochs=100):
             evaluate(net, test_loader, tokenizer)
 
     # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
-    optimizer = optim.Adam([
-        {'params': net.encoder.parameters()},
-        {'params': net.projection.parameters(), 'weight_decay': 0.1}
-    ], lr=0.1)
-    # optimizer = optim4GPU(net)
+    # optimizer = optim.Adam([
+    #     {'params': net.encoder.parameters()},
+    #     {'params': net.projection.parameters(), 'weight_decay': 0.1}
+    # ], lr=0.1)
+    optimizer = optim.SGD(net.parameters(), lr=0.05)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
