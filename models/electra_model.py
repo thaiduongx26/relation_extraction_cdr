@@ -96,7 +96,7 @@ class ElectraModelClassification(ElectraPreTrainedModel):
             self.embeddings_project = nn.Linear(config.embedding_size, config.hidden_size)
         self.encoder = BertEncoder(config)
         self.projection = nn.Linear(512, 2)
-        1/0
+        # 1/0
         self.config = config
         self.init_weights()
 
