@@ -106,19 +106,15 @@ def train(num_epochs=100):
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
                                   chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs)
             
-            probs = nn.Softmax(dim=1)
             loss = criteria(prediction, label)
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
-            # print('all_labels: ', all_labels)
-            # print('all_preds: ', all_preds)
             epoch_loss += loss
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            
-            
+
         # scheduler.step()
             
         average_loss = epoch_loss / i
@@ -134,7 +130,11 @@ def train(num_epochs=100):
         if do_eval:
             evaluate(net, test_loader, tokenizer)
 
-    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    optimizer = optim.Adam([
+        {'params': net.features.parameters()},
+        {'params': net.classifier.parameters(), 'weight_decay': 0.1}
+    ], lr=0.001)
     # optimizer = optim4GPU(net)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
