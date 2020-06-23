@@ -322,7 +322,7 @@ def make_cdr_sentence_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     for text_block in data_raw_sample:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         # count += sample.check_distance_CA()
-        final_sample = sample.make_example(use_entity_token=False)
+        final_sample = sample.make_example_sentence(use_entity_token=False)
         data += final_sample
     PS = PadSequenceCDRSentenceDataset(token_pad_value=tokenizer.pad_token_id)
     dataset = CDRSentenceDataset(data)
