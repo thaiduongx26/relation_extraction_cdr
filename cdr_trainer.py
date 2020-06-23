@@ -175,7 +175,8 @@ def evaluate_sentence(net, test_loader, tokenizer):
         
         prediction = net(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
-                                  used_entity_token=False)
+                                  used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
+                                  chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs)
         prediction.to('cpu')
         pred_label = prediction.argmax(dim=1).to('cpu')
         
@@ -238,7 +239,8 @@ def train_sentence(num_epochs=100):
 
             prediction = model(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
-                                  used_entity_token=False)
+                                  used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
+                                  chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs)
             # print('learned before = {}'.format(net.projection.weight.data))
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
             if (i % 100 == 0):
