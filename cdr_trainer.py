@@ -243,10 +243,10 @@ def train_sentence(num_epochs=100):
                                   chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs)
             # print('learned before = {}'.format(net.projection.weight.data))
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
-            if (i % 100 == 0):
-                print('label: ', label)
-                print('pred: ', prediction)
-                print('loss: ', loss)
+            # if (i % 100 == 0):
+            #     print('label: ', label)
+            #     print('pred: ', prediction)
+            #     print('loss: ', loss)
             
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
