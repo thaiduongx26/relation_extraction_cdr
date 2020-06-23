@@ -196,8 +196,8 @@ def evaluate_sentence(net, test_loader, tokenizer):
 
 def train_sentence(num_epochs=100):
 
-    _, train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=True)
-    _, test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=True)
+    _, train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=False)
+    _, test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=False)
 
     tokenizer = get_tokenizer()
     electra_config = ElectraConfig()
