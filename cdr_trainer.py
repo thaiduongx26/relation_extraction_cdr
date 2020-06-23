@@ -242,11 +242,13 @@ def train_sentence(num_epochs=100):
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
             
+            epoch_loss += loss
+
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
 
-            epoch_loss += loss
+            
         # scheduler.step()
             
         average_loss = epoch_loss / i
