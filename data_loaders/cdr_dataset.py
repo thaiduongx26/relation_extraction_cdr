@@ -312,7 +312,7 @@ def make_cdr_sentence_train_dataset(train_path, dev_path, use_entity_token=False
                              pin_memory=False)
     return data, data_loader
 
-def make_cdr_sentence_dataset(path, batch_size=16, shuffle=True, num_workers=0):
+def make_cdr_sentence_dataset(path, use_entity_token=False, batch_size=16, shuffle=True, num_workers=0):
     data = []
     tokenizer = get_tokenizer()
     # count = 0
