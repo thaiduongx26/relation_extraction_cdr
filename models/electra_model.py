@@ -495,29 +495,29 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
         sequence_output = hidden_states[0]
 
         batch_size = chemical_code_list.shape[0]
-        # def get_entity_embedding(token_embedding, masked_entities, code):
-        #     embedding = None
-        #     for i, mask in enumerate(masked_entities):
-        #         if mask == code:
-        #             embedding = token_embedding[i]
-        #             break
-        #     return embedding
-
         def get_entity_embedding(token_embedding, masked_entities, code):
-            count = 0
-            embedding = torch.zeros(token_embedding.shape[1]).cuda()
-            check = True
+            embedding = None
             for i, mask in enumerate(masked_entities):
                 if mask == code:
-                    if check:
-                        count += 1
-                        check = False
-                    embedding += token_embedding[i]
-                else:
-                    check = True
-
-            embedding = embedding / count
+                    embedding = token_embedding[i]
+                    break
             return embedding
+
+        # def get_entity_embedding(token_embedding, masked_entities, code):
+        #     count = 0
+        #     embedding = torch.zeros(token_embedding.shape[1]).cuda()
+        #     check = True
+        #     for i, mask in enumerate(masked_entities):
+        #         if mask == code:
+        #             if check:
+        #                 count += 1
+        #                 check = False
+        #             embedding += token_embedding[i]
+        #         else:
+        #             check = True
+
+        #     embedding = embedding / count
+        #     return embedding
 
         # def get_entity_embedding_use_e_token(token_embedding, masked_entities, code):
         #     embedding = None
