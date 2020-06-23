@@ -189,7 +189,7 @@ def evaluate_sentence(net, test_loader, tokenizer):
     # preds = torch.cat(preds, dim=-1)
     from sklearn.metrics import classification_report
     print("Testing report: ", classification_report(new_all_labels, new_all_preds))
-    print("Testing Confusion matrix report: ", confusion_matrix(new_all_labels, new_all_preds))
+    print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
 
 def train_sentence(num_epochs=100):
 
@@ -238,6 +238,8 @@ def train_sentence(num_epochs=100):
                                 # attention_masks=attention_mask,
                                   used_entity_token=False)
             # print('learned before = {}'.format(net.projection.weight.data))
+            print('label: ', label)
+            print('pred: ', prediction)
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
@@ -262,7 +264,7 @@ def train_sentence(num_epochs=100):
         from sklearn.metrics import classification_report
         print("average RE loss : ", average_loss)
         print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
-        print("Confusion matrix report: ", confusion_matrix(new_all_labels, new_all_preds))
+        print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
             evaluate_sentence(model, test_loader, tokenizer)
 
