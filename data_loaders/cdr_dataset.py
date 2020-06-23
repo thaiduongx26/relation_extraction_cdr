@@ -286,7 +286,7 @@ def make_cdr_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     return data_loader
 
 
-def make_cdr_sentence_train_dataset(train_path, dev_path, batch_size=16, shuffle=True, num_workers=0):
+def make_cdr_sentence_train_dataset(train_path, dev_path, use_entity_token=False, batch_size=16, shuffle=True, num_workers=0):
     data = []
     tokenizer = get_tokenizer()
     # count = 0
@@ -299,12 +299,12 @@ def make_cdr_sentence_train_dataset(train_path, dev_path, batch_size=16, shuffle
     for text_block in data_raw_sample_train:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         # count += sample.check_distance_CA()
-        final_sample = sample.make_example_sentence(use_entity_token=False)
+        final_sample = sample.make_example_sentence(use_entity_token=use_entity_token)
         data += final_sample
     for text_block in data_raw_sample_dev:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         # count += sample.check_distance_CA()
-        final_sample = sample.make_example_sentence(use_entity_token=False)
+        final_sample = sample.make_example_sentence(use_entity_token=use_entity_token)
         data += final_sample
     PS = PadSequenceCDRSentenceDataset(token_pad_value=tokenizer.pad_token_id)
     dataset = CDRSentenceDataset(data)
@@ -322,7 +322,7 @@ def make_cdr_sentence_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     for text_block in data_raw_sample:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         # count += sample.check_distance_CA()
-        final_sample = sample.make_example_sentence(use_entity_token=False)
+        final_sample = sample.make_example_sentence(use_entity_token=use_entity_token)
         data += final_sample
     PS = PadSequenceCDRSentenceDataset(token_pad_value=tokenizer.pad_token_id)
     dataset = CDRSentenceDataset(data)
