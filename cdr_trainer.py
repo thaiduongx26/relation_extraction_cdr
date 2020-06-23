@@ -4,7 +4,7 @@ from typing import *
 
 from transformers import AdamW
 
-from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification
+from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification, ElectraModelEntitySentenceClassification
 from transformers import ElectraConfig
 from data_loaders.cdr_dataset import make_cdr_dataset, make_cdr_train_dataset, make_cdr_sentence_train_dataset, make_cdr_sentence_dataset
 from tqdm import tqdm
@@ -195,13 +195,13 @@ def evaluate_sentence(net, test_loader, tokenizer):
 
 def train_sentence(num_epochs=100):
 
-    train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt')
-    test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt')
+    _, train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt')
+    _, test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt')
 
     tokenizer = get_tokenizer()
     electra_config = ElectraConfig()
     # net = ElectraModelSentenceClassification(electra_config)
-    net = ElectraModelSentenceClassification.from_pretrained('google/electra-small-discriminator')
+    net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-small-discriminator')
     # summary(net)
     # for param in net.
     for name, param in net.named_parameters():

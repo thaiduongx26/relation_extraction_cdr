@@ -310,7 +310,7 @@ def make_cdr_sentence_train_dataset(train_path, dev_path, batch_size=16, shuffle
     dataset = CDRSentenceDataset(data)
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=0, collate_fn=PS,
                              pin_memory=False)
-    return data_loader
+    return data, data_loader
 
 def make_cdr_sentence_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     data = []
@@ -328,7 +328,7 @@ def make_cdr_sentence_dataset(path, batch_size=16, shuffle=True, num_workers=0):
     dataset = CDRSentenceDataset(data)
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=0, collate_fn=PS,
                              pin_memory=False)
-    return data_loader
+    return data, data_loader
 
 class CDRDataset(Dataset):
     def __init__(self, data):
