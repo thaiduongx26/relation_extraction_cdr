@@ -2,6 +2,8 @@ from torch import nn
 import torch
 from typing import *
 
+from transformers import AdamW
+
 from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification
 from transformers import ElectraConfig
 from data_loaders.cdr_dataset import make_cdr_dataset, make_cdr_train_dataset, make_cdr_sentence_train_dataset, make_cdr_sentence_dataset
@@ -271,7 +273,19 @@ def train_sentence(num_epochs=100):
         if do_eval:
             evaluate_sentence(model, test_loader, tokenizer)
 
-    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    no_decay = ["bias", "LayerNorm.weight"]
+    optimizer_grouped_parameters = [
+        {
+            "params": [p for n, p in net.named_parameters() if not any(nd in n for nd in no_decay)],
+            "weight_decay": 0.0,
+        },
+        {
+            "params": [p for n, p in net.named_parameters() if any(nd in n for nd in no_decay)],
+            "weight_decay": 0.0,
+        },
+    ]
+    optimizer = AdamW(optimizer_grouped_parameters, lr=5e-4, eps=1e-8)
     
     # optimizer = optim.SGD(net.parameters(), lr=0.05)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
