@@ -212,7 +212,7 @@ def train_sentence(num_epochs=100):
     if cuda:
         net.cuda()
 
-    criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.pad_token_id).cuda()
+    criteria = torch.nn.CrossEntropyLoss().cuda()
 
     pad_id = tokenizer.pad_token_id
 
@@ -238,9 +238,11 @@ def train_sentence(num_epochs=100):
                                 # attention_masks=attention_mask,
                                   used_entity_token=False)
             # print('learned before = {}'.format(net.projection.weight.data))
+            loss = loss_fn(prediction.view(-1, 2), label.view(-1))
             print('label: ', label)
             print('pred: ', prediction)
-            loss = loss_fn(prediction.view(-1, 2), label.view(-1))
+            print('loss: ', loss)
+            
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
