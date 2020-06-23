@@ -61,6 +61,7 @@ def extract_sentence_contain_both_2_entities(text, entities_chemical: List, enti
                 data_e = check_multiple_positions(entity_c, entity_d, entities_pos, text.find(sent), sent, correct_answers)
                 if data_e:
                     data.append(data_e)
+                    break
     return data
 
 # def correct_answer_analysis()
