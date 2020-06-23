@@ -500,7 +500,16 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
             for i, mask in enumerate(masked_entities):
                 if mask == code:
                     embedding = token_embedding[i]
+                    break
             return embedding
+
+        # def get_entity_embedding_use_e_token(token_embedding, masked_entities, code):
+        #     embedding = None
+        #     for i, mask in enumerate(masked_entities):
+        #         if mask == code:
+        #             embedding = token_embedding[i]
+                    
+        #     return embedding
 
         # def get_entity_token_embedding(token_embedding, masked_entities, code):
         #     count = 0
@@ -530,6 +539,19 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                 entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
                 # print(entity_embedding.shape)
                 batch_embedding.append(entity_embedding.tolist())
+        # else:
+        #     for i in range(batch_size):
+        #         masked_entities = masked_entities_list[i]
+        #         chemical_code = chemical_code_list[i]
+        #         disease_code = disease_code_list[i]
+        #         token_embedding = sequence_output[i]
+        #         chemical_embedding = get_entity_embedding(token_embedding, masked_entities, chemical_code)
+        #         disease_embedding = get_entity_embedding(token_embedding, masked_entities, disease_code)
+        #         # print('chemical_embedding shape: ', chemical_embedding.shape)
+        #         # print('disease_embedding shape: ', disease_embedding.shape)
+        #         entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
+        #         # print(entity_embedding.shape)
+        #         batch_embedding.append(entity_embedding.tolist())
         batch_embedding = torch.tensor(batch_embedding).cuda()
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
