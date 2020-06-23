@@ -198,8 +198,8 @@ def train_sentence(num_epochs=100):
 
     tokenizer = get_tokenizer()
     electra_config = ElectraConfig()
-    net = ElectraModelSentenceClassification(electra_config)
-    # net = ElectraModelSentenceClassification.from_pretrained('google/electra-small-discriminator')
+    # net = ElectraModelSentenceClassification(electra_config)
+    net = ElectraModelSentenceClassification.from_pretrained('google/electra-small-discriminator')
     # summary(net)
     # for param in net.
     for name, param in net.named_parameters():
@@ -239,9 +239,10 @@ def train_sentence(num_epochs=100):
                                   used_entity_token=False)
             # print('learned before = {}'.format(net.projection.weight.data))
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
-            # print('label: ', label)
-            # print('pred: ', prediction)
-            # print('loss: ', loss)
+            if (i % 100 == 0):
+                print('label: ', label)
+                print('pred: ', prediction)
+                print('loss: ', loss)
             
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
