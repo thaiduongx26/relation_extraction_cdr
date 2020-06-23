@@ -11,7 +11,7 @@ from torch.optim.lr_scheduler import StepLR
 import torch.optim as optim
 from optim import optim4GPU
 from torchsummary import summary
-
+from sklearn.metrics import confusion_matrix
 
 import os
 
@@ -187,7 +187,8 @@ def evaluate_sentence(net, test_loader, tokenizer):
     # labels = torch.cat(labels, dim=-1)
     # preds = torch.cat(preds, dim=-1)
     from sklearn.metrics import classification_report
-    print("report: ", classification_report(new_all_labels, new_all_preds))
+    print("Testing report: ", classification_report(new_all_labels, new_all_preds))
+    print("Testing Confusion matrix report: ", confusion_matrix(new_all_labels, new_all_preds))
 
 def train_sentence(num_epochs=100):
 
@@ -246,11 +247,6 @@ def train_sentence(num_epochs=100):
             optimizer.zero_grad()
 
             epoch_loss += loss
-            
-            # print('learned after = {}'.format(net.projection.weight.data))
-            # print("learned A = {}".format(list(net.parameters())[14].data[0]))
-            # print("learned b = {}".format(list(net.parameters())[1].data[0]))
-
         # scheduler.step()
             
         average_loss = epoch_loss / i
@@ -263,6 +259,7 @@ def train_sentence(num_epochs=100):
         from sklearn.metrics import classification_report
         print("average RE loss : ", average_loss)
         print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
+        print("Confusion matrix report: ", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
             evaluate_sentence(net, test_loader, tokenizer)
 
