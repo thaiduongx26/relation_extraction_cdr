@@ -372,7 +372,8 @@ class ElectraModelSentenceClassification(ElectraPreTrainedModel):
             # output_attentions=output_attentions,
         )
         sequence_output = hidden_states[0]
-        x = self.dropout(sequence_output)
+        sequence_output_cls = sequence_output[:, 0, :]
+        x = self.dropout(sequence_output_cls)
         x = self.dense(x)
         x = get_activation("gelu")(x)  # although BERT uses tanh here, it seems Electra authors used gelu here
         x = self.dropout(x)
