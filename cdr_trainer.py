@@ -12,6 +12,7 @@ import torch.optim as optim
 from optim import optim4GPU
 from torchsummary import summary
 from sklearn.metrics import confusion_matrix
+import numpy as np
 
 import os
 
@@ -211,13 +212,13 @@ def train_sentence(num_epochs=100):
     if cuda:
         net.cuda()
 
-    criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.pad_token_id)
+    criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.pad_token_id).cuda()
 
     pad_id = tokenizer.pad_token_id
 
-    def train_model(optimizer=None, scheduler=None, tokenizer=None, do_eval=False):
-        net.train()
-        epoch_loss = 0
+    def train_model(model, loss_fn=None, optimizer=None, scheduler=None, tokenizer=None, do_eval=False):
+        model.train()
+        epoch_loss = []
         all_labels = []
         all_preds = []
         for i, batch in tqdm(enumerate(train_loader)):
@@ -233,16 +234,16 @@ def train_sentence(num_epochs=100):
                 attention_mask = attention_mask.cuda()
                 token_type_ids = token_type_ids.cuda()
 
-            prediction = net(x, token_type_ids=token_type_ids, 
+            prediction = model(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
                                   used_entity_token=False)
             # print('learned before = {}'.format(net.projection.weight.data))
-            loss = criteria(prediction, label)
+            loss = loss_fn((prediction.view(-1, 2), label.view(-1)))
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
             
-            epoch_loss += loss
+            epoch_loss.append(loss.item())
 
             loss.backward()
             optimizer.step()
@@ -251,7 +252,7 @@ def train_sentence(num_epochs=100):
             
         # scheduler.step()
             
-        average_loss = epoch_loss / i
+        average_loss = np.mean(epoch_loss)
         new_all_labels = []
         new_all_preds = []
         for i in range(len(all_labels)):
@@ -263,7 +264,7 @@ def train_sentence(num_epochs=100):
         print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
         print("Confusion matrix report: ", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
-            evaluate_sentence(net, test_loader, tokenizer)
+            evaluate_sentence(model, test_loader, tokenizer)
 
     optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
     
@@ -275,7 +276,7 @@ def train_sentence(num_epochs=100):
         do_eval = False
         if epoch % 3 == 0 or epoch == num_epochs - 1:
             do_eval = True
-        train_model(optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
+        train_model(net, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
 
 
 # def pretrain_model(num_epochs=100):
