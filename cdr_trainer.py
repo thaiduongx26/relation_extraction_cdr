@@ -235,7 +235,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
         epoch_loss = []
         all_labels = []
         all_preds = []
-        for i, batch in tqdm(enumerate(train_loader)):
+        for i, batch in enumerate(train_loader):
             x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
             # print('label = ', label)
             # label = torch.squeeze(label, 1)
