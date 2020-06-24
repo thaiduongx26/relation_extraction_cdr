@@ -12,7 +12,7 @@ from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
 import torch.optim as optim
 from optim import optim4GPU
-from torchsummary import summary
+# from torchsummary import summary
 from sklearn.metrics import confusion_matrix
 import numpy as np
 
