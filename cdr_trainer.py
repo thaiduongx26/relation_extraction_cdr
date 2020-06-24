@@ -396,4 +396,4 @@ def train_sentence(num_epochs=100):
 #         train_model(optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
 
 if __name__ == '__main__':
-    train_sentence()
+    train()
