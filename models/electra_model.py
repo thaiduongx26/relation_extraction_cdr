@@ -267,7 +267,7 @@ class ElectraModelClassification(ElectraPreTrainedModel):
         x = get_activation("gelu")(x)  # although BERT uses tanh here, it seems Electra authors used gelu here
         x = self.dropout(x)
         x = self.out_proj(x)
-        return output
+        return x
 
 
 class ElectraModelSentenceClassification(ElectraPreTrainedModel):
