@@ -392,4 +392,4 @@ def train_sentence(num_epochs=100, use_entity_token=False):
 #         train_model(optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
 
 if __name__ == '__main__':
-    train_sentence(use_entity_token=True)
+    train_sentence(num_epochs=1000, use_entity_token=True)
