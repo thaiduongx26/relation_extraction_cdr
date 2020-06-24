@@ -211,6 +211,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
 
     tokenizer = get_tokenizer()
     electra_config = ElectraConfig.from_pretrained('google/electra-small-discriminator')
+    electra_config.vocab_size = electra_config.vocab_size + 2
     net = ElectraModelEntitySentenceClassification(electra_config)
     # net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-small-discriminator')
     # summary(net)
