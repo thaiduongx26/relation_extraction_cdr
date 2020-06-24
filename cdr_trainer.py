@@ -61,7 +61,8 @@ def evaluate(net, test_loader, tokenizer):
     # labels = torch.cat(labels, dim=-1)
     # preds = torch.cat(preds, dim=-1)
     from sklearn.metrics import classification_report
-    print("report: ", classification_report(new_all_labels, new_all_preds))
+    print("Testing report: ", classification_report(new_all_labels, new_all_preds))
+    print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
 
 
 def train(num_epochs=100):
@@ -91,7 +92,7 @@ def train(num_epochs=100):
 
     def train_model(optimizer=None, scheduler=None, tokenizer=None, do_eval=False):
         net.train()
-        epoch_loss = 0
+        epoch_loss = []
         all_labels = []
         all_preds = []
         for i, batch in tqdm(enumerate(train_loader)):
@@ -117,6 +118,8 @@ def train(num_epochs=100):
             all_labels.append(label.data.to('cpu'))
             all_preds.append(pred.to('cpu'))
             
+            epoch_loss.append(loss.item())
+
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
@@ -129,7 +132,7 @@ def train(num_epochs=100):
 
         # scheduler.step()
             
-        average_loss = epoch_loss / i
+        average_loss = np.mean(epoch_loss)
         new_all_labels = []
         new_all_preds = []
         for i in range(len(all_labels)):
@@ -138,12 +141,24 @@ def train(num_epochs=100):
 
         from sklearn.metrics import classification_report
         print("average RE loss : ", average_loss)
-        print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
+        print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
+        print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
             evaluate(net, test_loader, tokenizer)
 
-    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
-    
+    # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    no_decay = ["bias", "LayerNorm.weight"]
+    optimizer_grouped_parameters = [
+        {
+            "params": [p for n, p in net.named_parameters() if not any(nd in n for nd in no_decay)],
+            "weight_decay": 0.0,
+        },
+        {
+            "params": [p for n, p in net.named_parameters() if any(nd in n for nd in no_decay)],
+            "weight_decay": 0.0,
+        },
+    ]
+    optimizer = AdamW(optimizer_grouped_parameters, lr=5e-4, eps=1e-8)
     # optimizer = optim.SGD(net.parameters(), lr=0.05)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):

@@ -96,7 +96,9 @@ class ElectraModelClassification(ElectraPreTrainedModel):
         if config.embedding_size != config.hidden_size:
             self.embeddings_project = nn.Linear(config.embedding_size, config.hidden_size)
         self.encoder = BertEncoder(config)
-        self.projection = nn.Linear(512, 2)
+        self.dense = nn.Linear(512, 512)
+        self.dropout = nn.Dropout(0.1)
+        self.out_proj = nn.Linear(512, 2)
         # 1/0
         self.config = config
         self.init_weights()
@@ -259,7 +261,12 @@ class ElectraModelClassification(ElectraPreTrainedModel):
         #         batch_embedding.append(entity_embedding.tolist())
         batch_embedding = torch.tensor(batch_embedding).cuda()
         # print('batch_embedding shape: ', batch_embedding.shape)
-        output = self.projection(batch_embedding)
+        sequence_output_cls = batch_embedding
+        x = self.dropout(sequence_output_cls)
+        x = self.dense(x)
+        x = get_activation("gelu")(x)  # although BERT uses tanh here, it seems Electra authors used gelu here
+        x = self.dropout(x)
+        x = self.out_proj(x)
         return output
 
 
