@@ -201,18 +201,18 @@ def evaluate_sentence(net, test_loader, tokenizer):
     # labels = torch.cat(labels, dim=-1)
     # preds = torch.cat(preds, dim=-1)
     from sklearn.metrics import classification_report
-    print("Testing report: ", classification_report(new_all_labels, new_all_preds))
+    print("Testing report: \n", classification_report(new_all_labels, new_all_preds))
     print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
 
-def train_sentence(num_epochs=100):
+def train_sentence(num_epochs=100, use_entity_token=False):
 
-    _, train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=False)
-    _, test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=False)
+    _, train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token)
+    _, test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token)
 
     tokenizer = get_tokenizer()
-    electra_config = ElectraConfig()
-    # net = ElectraModelSentenceClassification(electra_config)
-    net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-small-discriminator')
+    electra_config = ElectraConfig.from_pretrained('google/electra-small-discriminator')
+    net = ElectraModelSentenceClassification(electra_config)
+    # net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-small-discriminator')
     # summary(net)
     # for param in net.
     for name, param in net.named_parameters():
@@ -280,7 +280,7 @@ def train_sentence(num_epochs=100):
 
         from sklearn.metrics import classification_report
         print("average RE loss : ", average_loss)
-        print("train_cls report: ", classification_report(new_all_labels, new_all_preds))
+        print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
         print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
             evaluate_sentence(model, test_loader, tokenizer)
@@ -391,4 +391,4 @@ def train_sentence(num_epochs=100):
 #         train_model(optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
 
 if __name__ == '__main__':
-    train()
+    train_sentence()
