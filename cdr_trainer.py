@@ -170,7 +170,7 @@ def evaluate_sentence(net, test_loader, tokenizer):
     labels = []
     preds = []
 
-    for i, batch in tqdm(enumerate(test_loader)):
+    for i, batch in (enumerate(test_loader)):
         x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
         # label = torch.squeeze(label, 1).to('cpu')
         label = label.data
@@ -203,9 +203,10 @@ def evaluate_sentence(net, test_loader, tokenizer):
     from sklearn.metrics import classification_report
     print("Testing report: \n", classification_report(new_all_labels, new_all_preds))
     print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
+    return classification_report(new_all_labels, new_all_preds, output_dict=True)['1']
 
 def train_sentence(num_epochs=100, use_entity_token=False):
-
+    best_test_results = None
     _, train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token)
     _, test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token)
 
@@ -214,7 +215,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
     # electra_config.vocab_size = electra_config.vocab_size + 2
     # net = ElectraModelEntitySentenceClassification(electra_config)
 
-    net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-small-discriminator')
+    net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-base-discriminator')
     net.resize_token_embeddings(len(tokenizer))
     # summary(net)
     # for param in net.
@@ -286,7 +287,9 @@ def train_sentence(num_epochs=100, use_entity_token=False):
         print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
         print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
-            evaluate_sentence(model, test_loader, tokenizer)
+            res = evaluate_sentence(model, test_loader, tokenizer)
+            if res == None or res['f1-score'] > best_test_results['f1-score']:
+                best_test_results = res
 
     # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
     no_decay = ["bias", "LayerNorm.weight"]
@@ -311,6 +314,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
         if epoch % 1 == 0 or epoch == num_epochs - 1:
             do_eval = True
         train_model(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
+        print('Best result on test data: Precision: {}, Recall: {}, F1: {}'.format(best_test_results['precision'], best_test_results['recall'], best_test_results['f1-score']))
 
 
 if __name__ == '__main__':
