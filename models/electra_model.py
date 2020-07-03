@@ -399,9 +399,9 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
         if config.embedding_size != config.hidden_size:
             self.embeddings_project = nn.Linear(config.embedding_size, config.hidden_size)
         self.encoder = BertEncoder(config)
-        self.dense = nn.Linear(512, 512)
+        self.dense = nn.Linear(config.embedding_size * 2, config.embedding_size * 2)
         self.dropout = nn.Dropout(0.1)
-        self.out_proj = nn.Linear(512, 2)
+        self.out_proj = nn.Linear(config.embedding_size * 2, 2)
         self.init_weights()
 
     def get_input_embeddings(self):
@@ -532,19 +532,6 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
         #         if mask == code:
         #             embedding = token_embedding[i]
                     
-        #     return embedding
-
-        # def get_entity_token_embedding(token_embedding, masked_entities, code):
-        #     count = 0
-        #     embedding = torch.zeros(token_embedding.shape[1]).cuda()
-        #     check = True
-        #     for i, mask in enumerate(masked_entities):
-        #         if mask == code and check:
-        #             count += 1
-        #             embedding += token_embedding[i]
-        #         else:
-        #             if 
-        #     # embedding = embedding / count
         #     return embedding
 
         batch_embedding = []
