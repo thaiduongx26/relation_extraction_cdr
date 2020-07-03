@@ -288,8 +288,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
         print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
             res = evaluate_sentence(model, test_loader, tokenizer)
-            if res == None or res['f1-score'] > best_test_results['f1-score']:
-                best_test_results = res
+            return res
 
     # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
     no_decay = ["bias", "LayerNorm.weight"]
@@ -313,7 +312,9 @@ def train_sentence(num_epochs=100, use_entity_token=False):
         do_eval = False
         if epoch % 1 == 0 or epoch == num_epochs - 1:
             do_eval = True
-        train_model(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
+        res_test = train_model(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
+        if best_test_results == None or res_test['f1-score'] > best_test_results['f1-score']:
+            best_test_results = res_test
         print('Best result on test data: Precision: {}, Recall: {}, F1: {}'.format(best_test_results['precision'], best_test_results['recall'], best_test_results['f1-score']))
 
 
