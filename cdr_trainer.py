@@ -308,7 +308,6 @@ def train_sentence(num_epochs=100, use_entity_token=False):
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
-        # print('Epoch:', epoch,'LR:', scheduler.get_lr())
         do_eval = False
         if epoch % 1 == 0 or epoch == num_epochs - 1:
             do_eval = True
