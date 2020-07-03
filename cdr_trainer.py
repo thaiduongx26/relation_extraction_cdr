@@ -300,7 +300,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
             "weight_decay": 0.0,
         },
     ]
-    optimizer = AdamW(optimizer_grouped_parameters, lr=5e-4, eps=1e-8)
+    optimizer = AdamW(optimizer_grouped_parameters, lr=5e-3, eps=1e-8)
     
     # optimizer = optim.SGD(net.parameters(), lr=0.05)
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
