@@ -63,10 +63,11 @@ def evaluate(net, test_loader, tokenizer):
     from sklearn.metrics import classification_report
     print("Testing report: ", classification_report(new_all_labels, new_all_preds))
     print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
+    return classification_report(new_all_labels, new_all_preds, output_dict=True)['1']
 
 
 def train(num_epochs=100):
-
+    best_test_results = None
     train_loader = make_cdr_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt')
     test_loader = make_cdr_dataset('data/cdr/CDR_TestSet.PubTator.txt')
 
@@ -158,11 +159,13 @@ def train(num_epochs=100):
     # scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[2,4,6,8,12,15,18,20,22,24,26,30], gamma=0.8)
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
-        # print('Epoch:', epoch,'LR:', scheduler.get_lr())
         do_eval = False
-        if epoch % 3 == 0 or epoch == num_epochs - 1:
+        if epoch % 1 == 0 or epoch == num_epochs - 1:
             do_eval = True
-        train_model(optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
+        res_test = train_model(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
+        if best_test_results == None or res_test['f1-score'] > best_test_results['f1-score']:
+            best_test_results = res_test
+        print('Best result on test data: Precision: {}, Recall: {}, F1: {}'.format(best_test_results['precision'], best_test_results['recall'], best_test_results['f1-score']))
 
 def evaluate_sentence(net, test_loader, tokenizer):
     net.eval()

@@ -15,3 +15,6 @@ def get_tokenizer():
         gen_tokenizer(TOKENIZER_PATH)
     tokenizer = load_pickle(TOKENIZER_PATH)
     return tokenizer
+
+# def get_tokenizer_with_new_vocab(path_vocab):
+    
