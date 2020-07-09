@@ -6,7 +6,7 @@ from transformers import AdamW
 
 from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification, ElectraModelEntitySentenceClassification
 from transformers import ElectraConfig
-from data_loaders.cdr_dataset import make_cdr_dataset, make_cdr_train_dataset, make_cdr_sentence_train_dataset, make_cdr_sentence_dataset
+from data_loaders.cdr_dataset import make_cdr_dataset, make_cdr_train_dataset, make_cdr_train_non_global_dataset, make_cdr_non_global_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
@@ -175,7 +175,6 @@ def evaluate_sentence(net, test_loader, tokenizer):
 
     for i, batch in (enumerate(test_loader)):
         x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
-        # label = torch.squeeze(label, 1).to('cpu')
         label = label.data
         labels.append(label)
         attention_mask = (x != pad_id).float()
@@ -210,8 +209,8 @@ def evaluate_sentence(net, test_loader, tokenizer):
 
 def train_sentence(num_epochs=100, use_entity_token=False):
     best_test_results = None
-    _, train_loader = make_cdr_sentence_train_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token)
-    _, test_loader = make_cdr_sentence_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token)
+    _, train_loader = make_cdr_train_non_global_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token)
+    _, test_loader = make_cdr_non_global_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token)
 
     tokenizer = get_tokenizer()
     # electra_config = ElectraConfig.from_pretrained('google/electra-small-discriminator')
@@ -258,7 +257,6 @@ def train_sentence(num_epochs=100, use_entity_token=False):
                                 # attention_masks=attention_mask,
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
                                   chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs)
-            # print('learned before = {}'.format(net.projection.weight.data))
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
             # if (i % 100 == 0):
             #     print('label: ', label)
