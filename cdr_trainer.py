@@ -6,7 +6,7 @@ from transformers import AdamW
 
 from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification, ElectraModelEntitySentenceClassification
 from transformers import ElectraConfig
-from data_loaders.cdr_dataset import make_cdr_dataset, make_cdr_train_dataset, make_cdr_train_non_global_dataset, make_cdr_non_global_dataset
+from data_loaders.cdr_dataset import make_cdr_train_non_global_dataset, make_cdr_non_global_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
