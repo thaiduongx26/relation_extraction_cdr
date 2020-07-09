@@ -271,9 +271,9 @@ class CDR_Sample():
                 first = sample['entity_chemical']
                 second = sample['entity_disease']
             
-            print('first: ', first)
-            print('second: ', second)
-            print('text: ', new_text)
+            # print('first: ', first)
+            # print('second: ', second)
+            # print('text: ', new_text)
             text_tokenized = self.tokenize.encode(new_text)
             ids = 0
             entity_check = 0
@@ -302,7 +302,7 @@ class CDR_Sample():
                     entity_check += 1
                     ids += 1
             
-            print('masked_entities: ', masked_entities)
+            # print('masked_entities: ', masked_entities)
 
             if not use_entity_token:
                 text_tokenized = list(filter(lambda a: a != e_start_ids and a != e_end_ids, text_tokenized))
