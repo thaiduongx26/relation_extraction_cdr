@@ -275,6 +275,8 @@ class CDR_Sample():
             # print('second: ', second)
             # print('text: ', new_text)
             text_tokenized = self.tokenize.encode(new_text)
+            if len(text_tokenized) > 512:
+                continue
             ids = 0
             entity_check = 0
             while ids < len(text_tokenized):
@@ -355,7 +357,7 @@ def test_extract_data(path):
     return list_data_intra, list_data_inter, list_data_global
     
 
-def make_cdr_train_non_global_dataset(train_path, dev_path, use_entity_token=False, batch_size=16, shuffle=True, num_workers=0):
+def make_cdr_train_non_global_dataset(train_path, dev_path, use_entity_token=False, batch_size=16, shuffle=True, num_workers=0, extract_type='intra'):
     data = []
     tokenizer = get_tokenizer()
     # count = 0
@@ -367,11 +369,11 @@ def make_cdr_train_non_global_dataset(train_path, dev_path, use_entity_token=Fal
     data_raw_sample_dev = gen_samples(raw_data_dev)
     for text_block in data_raw_sample_train:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
-        final_sample = sample.make_example_non_global(use_entity_token=use_entity_token, extract_type='intra')
+        final_sample = sample.make_example_non_global(use_entity_token=use_entity_token, extract_type=extract_type)
         data += final_sample
     for text_block in data_raw_sample_dev:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
-        final_sample = sample.make_example_non_global(use_entity_token=use_entity_token, extract_type='intra')
+        final_sample = sample.make_example_non_global(use_entity_token=use_entity_token, extract_type=extract_type)
         data += final_sample
     PS = PadSequenceCDRSentenceDataset(token_pad_value=tokenizer.pad_token_id)
     dataset = CDRIntraDataset(data)
