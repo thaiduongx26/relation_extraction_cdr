@@ -337,7 +337,7 @@ def evaluate_ner(net, test_loader, tokenizer):
             attention_mask = attention_mask.cuda()
             token_type_ids = token_type_ids.cuda()
         
-        prediction = model(x, token_type_ids=token_type_ids, 
+        prediction = net(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
                                   entity_token_ids=entity_token_ids)
         prediction.to('cpu')
