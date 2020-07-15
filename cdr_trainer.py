@@ -6,7 +6,7 @@ from transformers import AdamW
 
 from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification, ElectraModelEntitySentenceClassification
 from transformers import ElectraConfig
-from data_loaders.cdr_dataset import make_cdr_train_non_global_dataset, make_cdr_non_global_dataset
+from data_loaders.cdr_dataset import make_cdr_train_non_global_dataset, make_cdr_non_global_dataset, make_train_pretrain_ner_dataset, make_pretrain_ner_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
@@ -318,6 +318,141 @@ def train_sentence(num_epochs=100, use_entity_token=False):
             best_test_results = res_test
         print('Best result on test data: Precision: {}, Recall: {}, F1: {}'.format(best_test_results['precision'], best_test_results['recall'], best_test_results['f1-score']))
 
+def evaluate_ner(net, test_loader, tokenizer):
+    net.eval()
+    pad_id = tokenizer.pad_token_id
+    labels = []
+    preds = []
+
+    for i, batch in (enumerate(test_loader)):
+        x, entity_token_ids, label = batch
+        label = label.data
+        labels.append(label)
+        attention_mask = (x != pad_id).float()
+        attention_mask = (1. - attention_mask) * -10000.
+        token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
+        if cuda:
+            x = x.cuda()
+            attention_mask = attention_mask.cuda()
+            token_type_ids = token_type_ids.cuda()
+        
+        prediction = model(x, token_type_ids=token_type_ids, 
+                                # attention_masks=attention_mask,
+                                  entity_token_ids=entity_token_ids)
+        prediction.to('cpu')
+        pred_label = prediction.argmax(dim=1).to('cpu')
+        
+        preds.append(pred_label)
+    
+    new_all_labels = []
+    new_all_preds = []
+    for i in range(len(labels)):
+        new_all_labels += labels[i].tolist()
+        new_all_preds += preds[i].tolist()
+    
+    # labels = torch.cat(labels, dim=-1)
+    # preds = torch.cat(preds, dim=-1)
+    from sklearn.metrics import classification_report
+    print("Testing report: \n", classification_report(new_all_labels, new_all_preds))
+    print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
+    return classification_report(new_all_labels, new_all_preds, output_dict=True)['1']
+
+def train_ner(num_epochs=100, use_entity_token=False):
+    best_test_results = None
+    _, train_loader = make_train_pretrain_ner_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token)
+    _, test_loader = make_pretrain_ner_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
+    # _, train_loader = make_cdr_non_global_dataset('data/cdr/CDR_TrainingSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
+
+    tokenizer = get_tokenizer()
+    # electra_config = ElectraConfig.from_pretrained('google/electra-small-discriminator')
+    # electra_config.vocab_size = electra_config.vocab_size + 2
+    # net = ElectraModelEntitySentenceClassification(electra_config)
+
+    net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-base-discriminator')
+    net.resize_token_embeddings(len(tokenizer))
+    # summary(net)
+    # for param in net.
+    for name, param in net.named_parameters():
+        print("name: {}, unfrozen:{}, size: {}".format(name, param.requires_grad, param.size()))
+    
+    if cuda:
+        net.cuda()
+
+    criteria = torch.nn.CrossEntropyLoss().cuda()
+
+    pad_id = tokenizer.pad_token_id
+
+    def train_model(model, loss_fn=None, optimizer=None, scheduler=None, tokenizer=None, do_eval=False):
+        model.train()
+        epoch_loss = []
+        all_labels = []
+        all_preds = []
+        for i, batch in enumerate(train_loader):
+            x, entity_token_ids, label = batch
+            attention_mask = (x != pad_id).float()
+            attention_mask = (1. - attention_mask) * -10000.
+            token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
+            if cuda:
+                x = x.cuda()
+                label = label.cuda()
+                attention_mask = attention_mask.cuda()
+                token_type_ids = token_type_ids.cuda()
+
+            prediction = model(x, token_type_ids=token_type_ids, 
+                                # attention_masks=attention_mask,
+                                  entity_token_ids=entity_token_ids)
+            loss = loss_fn(prediction.view(-1, 2), label.view(-1))
+            
+            pred = prediction.argmax(dim=-1)
+            all_labels.append(label.data.to('cpu'))
+            all_preds.append(pred.to('cpu'))
+            
+            epoch_loss.append(loss.item())
+
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+
+            
+            
+        average_loss = np.mean(epoch_loss)
+        new_all_labels = []
+        new_all_preds = []
+        for i in range(len(all_labels)):
+            new_all_labels += all_labels[i].tolist()
+            new_all_preds += all_preds[i].tolist()
+
+        from sklearn.metrics import classification_report
+        print("average RE loss : ", average_loss)
+        print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
+        print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
+        if do_eval:
+            res = evaluate_sentence(model, test_loader, tokenizer)
+            return res
+
+    # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
+    no_decay = ["bias", "LayerNorm.weight"]
+    optimizer_grouped_parameters = [
+        {
+            "params": [p for n, p in net.named_parameters() if not any(nd in n for nd in no_decay)],
+            "weight_decay": 0.0,
+        },
+        {
+            "params": [p for n, p in net.named_parameters() if any(nd in n for nd in no_decay)],
+            "weight_decay": 0.0,
+        },
+    ]
+    optimizer = AdamW(optimizer_grouped_parameters, lr=5e-4, eps=1e-8)
+
+    for epoch in range(num_epochs):
+        print('Epoch:', epoch)
+        do_eval = False
+        if epoch % 1 == 0 or epoch == num_epochs - 1:
+            do_eval = True
+        res_test = train_model(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
+        if best_test_results == None or res_test['f1-score'] > best_test_results['f1-score']:
+            best_test_results = res_test
+        print('Best result on test data: Precision: {}, Recall: {}, F1: {}'.format(best_test_results['precision'], best_test_results['recall'], best_test_results['f1-score']))
 
 if __name__ == '__main__':
-    train_sentence(num_epochs=1000, use_entity_token=True)
+    train_ner(num_epochs=1000, use_entity_token=True)
