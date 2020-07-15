@@ -583,7 +583,7 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
         if config.embedding_size != config.hidden_size:
             self.embeddings_project = nn.Linear(config.embedding_size, config.hidden_size)
         self.encoder = BertEncoder(config)
-        self.dense = nn.Linear(config.embedding_size * 2, config.embedding_size * 2)
+        self.dense = nn.Linear(config.embedding_size, config.embedding_size * 2)
         self.dropout = nn.Dropout(0.1)
         self.out_proj = nn.Linear(config.embedding_size * 2, 2)
         self.init_weights()
@@ -645,7 +645,7 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
         hidden_states = self.encoder(
             hidden_states,
             attention_mask=extended_attention_mask,
-            head_mask=head_mask,
+            head_mask=head_mask
             # output_attentions=output_attentions,
         )
         sequence_output = hidden_states[0]
