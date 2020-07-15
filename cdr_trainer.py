@@ -360,6 +360,7 @@ def evaluate_ner(net, test_loader, tokenizer):
 
 def train_ner(num_epochs=100, use_entity_token=False):
     best_test_results = None
+    best_epoch = None
     _, train_loader = make_train_pretrain_ner_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token)
     _, test_loader = make_pretrain_ner_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token)
     # _, train_loader = make_cdr_non_global_dataset('data/cdr/CDR_TrainingSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
@@ -454,7 +455,9 @@ def train_ner(num_epochs=100, use_entity_token=False):
         res_test = train_model(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
         if best_test_results == None or res_test['f1-score'] > best_test_results['f1-score']:
             best_test_results = res_test
+            best_epoch = epoch
         print('Best result on test data: Precision: {}, Recall: {}, F1: {}'.format(best_test_results['precision'], best_test_results['recall'], best_test_results['f1-score']))
+        print('Best epoch = ', best_epoch)
 
 if __name__ == '__main__':
     train_ner(num_epochs=1000, use_entity_token=True)
