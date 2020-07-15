@@ -4,7 +4,7 @@ from typing import *
 
 from transformers import AdamW
 
-from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification, ElectraModelEntitySentenceClassification
+from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification, ElectraModelEntitySentenceClassification, ElectraModelEntityTokenClassification
 from transformers import ElectraConfig
 from data_loaders.cdr_dataset import make_cdr_train_non_global_dataset, make_cdr_non_global_dataset, make_train_pretrain_ner_dataset, make_pretrain_ner_dataset
 from tqdm import tqdm
@@ -366,11 +366,8 @@ def train_ner(num_epochs=100, use_entity_token=False):
     # _, train_loader = make_cdr_non_global_dataset('data/cdr/CDR_TrainingSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
 
     tokenizer = get_tokenizer()
-    # electra_config = ElectraConfig.from_pretrained('google/electra-small-discriminator')
-    # electra_config.vocab_size = electra_config.vocab_size + 2
-    # net = ElectraModelEntitySentenceClassification(electra_config)
 
-    net = ElectraModelEntitySentenceClassification.from_pretrained('google/electra-base-discriminator')
+    net = ElectraModelEntityTokenClassification.from_pretrained('google/electra-base-discriminator')
     net.resize_token_embeddings(len(tokenizer))
     # summary(net)
     # for param in net.
