@@ -650,17 +650,14 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
         )
         sequence_output = hidden_states[0]
 
-        batch_size = chemical_code_list.shape[0]
+        batch_size = sequence_output.shape[0]
 
         batch_embedding = []
 
-        if not used_entity_token:
-            for i in range(batch_size):
-                masked_entities = masked_entities_list[i]
-                chemical_code = chemical_code_list[i]
-                disease_code = disease_code_list[i]
-                entity_embedding = sequence_output[i][entity_token_ids]
-                batch_embedding.append(entity_embedding.tolist())
+        for i in range(batch_size):
+            masked_entities = masked_entities_list[i]
+            entity_embedding = sequence_output[i][entity_token_ids]
+            batch_embedding.append(entity_embedding.tolist())
         
         batch_embedding = torch.tensor(batch_embedding).cuda()
         sequence_output_cls = batch_embedding
