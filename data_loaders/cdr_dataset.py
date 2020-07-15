@@ -377,7 +377,6 @@ class CDR_Sample():
 
         if not use_entity_token:
             text_tokenized = list(filter(lambda a: a != e_start_ids and a != e_end_ids, text_tokenized))
-        print('list_entity_token_type: ', list_entity_token_type)
         if len(masked_entities) != len(text_tokenized):
             print('Ops ! Something wrong, len of masked_entities is {}, while len of text_tokenized is {}'.format(len(masked_entities), len(text_tokenized)))
         for i in range(len(list_entity_token_idx)):

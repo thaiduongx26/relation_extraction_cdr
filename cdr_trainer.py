@@ -360,7 +360,7 @@ def evaluate_ner(net, test_loader, tokenizer):
 def train_ner(num_epochs=100, use_entity_token=False):
     best_test_results = None
     _, train_loader = make_train_pretrain_ner_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token)
-    _, test_loader = make_pretrain_ner_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
+    _, test_loader = make_pretrain_ner_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token)
     # _, train_loader = make_cdr_non_global_dataset('data/cdr/CDR_TrainingSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
 
     tokenizer = get_tokenizer()
