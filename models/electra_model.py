@@ -649,7 +649,6 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
             # output_attentions=output_attentions,
         )
         sequence_output = hidden_states[0]
-        print('sequence_output.shape : ', sequence_output.shape[0])
         batch_size = sequence_output.shape[0]
 
         batch_embedding = []
@@ -659,7 +658,6 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
             batch_embedding.append(entity_embedding.tolist())
         
         batch_embedding = torch.tensor(batch_embedding).cuda()
-        print('batch embedding size: ', batch_embedding.shape)
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
         x = self.dense(x)
