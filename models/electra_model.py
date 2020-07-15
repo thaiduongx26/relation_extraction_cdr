@@ -655,7 +655,7 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
         batch_embedding = []
 
         for i in range(batch_size):
-            entity_embedding = sequence_output[i][entity_token_ids]
+            entity_embedding = sequence_output[i][entity_token_ids[i]]
             batch_embedding.append(entity_embedding.tolist())
         
         batch_embedding = torch.tensor(batch_embedding).cuda()
