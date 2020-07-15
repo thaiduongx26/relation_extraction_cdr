@@ -655,7 +655,6 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
         batch_embedding = []
 
         for i in range(batch_size):
-            masked_entities = masked_entities_list[i]
             entity_embedding = sequence_output[i][entity_token_ids]
             batch_embedding.append(entity_embedding.tolist())
         
