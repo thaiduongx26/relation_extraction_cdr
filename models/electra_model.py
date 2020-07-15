@@ -659,6 +659,7 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
             batch_embedding.append(entity_embedding.tolist())
         
         batch_embedding = torch.tensor(batch_embedding).cuda()
+        print('batch embedding size: ', batch_embedding.shape)
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
         x = self.dense(x)
