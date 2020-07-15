@@ -427,7 +427,7 @@ def train_ner(num_epochs=100, use_entity_token=False):
         print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
         print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
-            res = evaluate_sentence(model, test_loader, tokenizer)
+            res = evaluate_ner(model, test_loader, tokenizer)
             return res
 
     # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
