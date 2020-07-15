@@ -649,7 +649,7 @@ class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):
             # output_attentions=output_attentions,
         )
         sequence_output = hidden_states[0]
-
+        print('sequence_output.shape : ', sequence_output.shape[0])
         batch_size = sequence_output.shape[0]
 
         batch_embedding = []
