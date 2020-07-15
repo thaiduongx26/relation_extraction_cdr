@@ -55,7 +55,8 @@ class PadSequenceNERCDRDataset():
         
 
     def __call__(self, batch):
-        seqs = [x[0] for x in batch]        
+        seqs = [x[0] for x in batch]  
+        seqs = pad_sequence(seqs, batch_first=True, padding_value=self.token_pad_value)
         code_index = torch.stack(list(map(lambda x: x[1], batch)))
         label = torch.stack(list(map(lambda x: x[2], batch)))
         return seqs, code_index, label

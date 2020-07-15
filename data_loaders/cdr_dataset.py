@@ -162,24 +162,6 @@ class CDR_Sample():
             return True
         return False
 
-    # def samples_append(self, final_sample, chemical_code, disease_code):
-    #     if (chemical_code, disease_code) in self.correct_answers:
-    #         final_sample.append({
-    #             'text_tokenized': text_tokenized,
-    #             'masked_entities': masked_entities,
-    #             'chemical_code': le.transform([chemical_code])[0],
-    #             'disease_code': le.transform([disease_code])[0],
-    #             'label': 1
-    #         })
-    #     else:
-    #         final_sample.append({
-    #             'text_tokenized': text_tokenized,
-    #             'masked_entities': masked_entities,
-    #             'chemical_code': le.transform([chemical_code])[0],
-    #             'disease_code': le.transform([disease_code])[0],
-    #             'label': 0
-    #         })
-    #     return final_sample
 
     def process_masked_entities(self, entities_pos_sorted, text_tokenized, use_entity_token):
         masked_entities = []
@@ -337,7 +319,7 @@ class CDR_Sample():
                     'start': start,
                     'end': end
                 })
-        entities_pos_sorted = sorted(entities_pos, key=itemgetter('start')) 
+        entities_pos_sorted = sorted(entities_pos, key=itemgetter('start'))
         for pos in reversed(entities_pos_sorted):
             start = int(pos['start'])
             end = int(pos['end'])
@@ -405,14 +387,12 @@ def test_extract_data(path):
     data = []
     tokenizer = get_tokenizer()
     list_data_intra, list_data_inter, list_data_global = [], [], []
-    # count = 0
     with open(path, 'r') as f:
         raw_data = f.readlines()
     data_raw_sample = gen_samples(raw_data)
     list_samples = []
     for text_block in data_raw_sample:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
-        # count += sample.check_distance_CA()
         data_intra, data_inter, data_global = sample.extract_intra_inter_sentence(extract_inter=True)
         list_data_intra += data_intra
         list_data_inter += data_inter
@@ -423,7 +403,6 @@ def test_extract_data(path):
 def make_cdr_train_non_global_dataset(train_path, dev_path, use_entity_token=False, batch_size=16, shuffle=True, num_workers=0, extract_type='intra'):
     data = []
     tokenizer = get_tokenizer()
-    # count = 0
     with open(train_path, 'r') as f:
         raw_data_train = f.readlines()
     with open(dev_path, 'r') as f:
@@ -447,7 +426,6 @@ def make_cdr_train_non_global_dataset(train_path, dev_path, use_entity_token=Fal
 def make_cdr_non_global_dataset(path, use_entity_token=False, batch_size=16, shuffle=True, num_workers=0, extract_type='intra'):
     data = []
     tokenizer = get_tokenizer()
-    # count = 0
     with open(path, 'r') as f:
         raw_data = f.readlines()
     data_raw_sample = gen_samples(raw_data)
@@ -466,7 +444,6 @@ def make_train_pretrain_ner_dataset(train_path, dev_path, use_entity_token=False
     import copy
     data = []
     tokenizer = get_tokenizer()
-    # count = 0
     with open(train_path, 'r') as f:
         raw_data_train = f.readlines()
     with open(dev_path, 'r') as f:
@@ -492,7 +469,6 @@ def make_pretrain_ner_dataset(path, use_entity_token=False, batch_size=16, shuff
     import copy
     data = []
     tokenizer = get_tokenizer()
-    # count = 0
     with open(path, 'r') as f:
         raw_data = f.readlines()
     data_raw_sample = gen_samples(raw_data)
