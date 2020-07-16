@@ -356,7 +356,7 @@ def evaluate_ner(net, test_loader, tokenizer):
     from sklearn.metrics import classification_report
     print("Testing report: \n", classification_report(new_all_labels, new_all_preds))
     print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
-    return classification_report(new_all_labels, new_all_preds, output_dict=True)['1']
+    return classification_report(new_all_labels, new_all_preds, output_dict=True)['macro avg']
 
 def train_ner(num_epochs=100, use_entity_token=False):
     best_test_results = None
@@ -453,6 +453,7 @@ def train_ner(num_epochs=100, use_entity_token=False):
         if best_test_results == None or res_test['f1-score'] > best_test_results['f1-score']:
             best_test_results = res_test
             best_epoch = epoch
+            net.save_pretrained('models_saved/electra_token_model')
         print('Best result on test data: Precision: {}, Recall: {}, F1: {}'.format(best_test_results['precision'], best_test_results['recall'], best_test_results['f1-score']))
         print('Best epoch = ', best_epoch)
 
