@@ -254,7 +254,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
             x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
             # print('label = ', label)
             # label = torch.squeeze(label, 1)
-            print('x: ', x)
+            # print('x: ', x)
             attention_mask = (x != pad_id).float()
             attention_mask = (1. - attention_mask) * -10000.
             token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
