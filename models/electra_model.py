@@ -522,7 +522,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     current_idx = i
             print("embedding: ", embedding_size)
             if len(embedding) == 0:
-                embedding= [torch.zeros((embedding_size,))]
+                embedding= [torch.zeros(embedding_size)]
                 if torch.cuda.is_available():
                     embedding =torch.stack( embedding).cuda()
                 print("embedding out zero: ", embedding.size())
