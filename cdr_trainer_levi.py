@@ -339,6 +339,8 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
                                used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs,
                                chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs,
                                is_full_sample= True)
+            print("prediction shape: ", prediction.size())
+            print("label shape: ", label.size())
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
             # if (i % 100 == 0):
             #     print('label: ', label)
