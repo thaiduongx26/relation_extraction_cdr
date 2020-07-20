@@ -432,6 +432,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
         masked_entities_list=None,
         chemical_code_list=None,
         disease_code_list=None,
+        is_full_sample= False,
     ):
         r"""
     Return:
@@ -510,6 +511,27 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     break
             return embedding
 
+        def get_all_entity_embedding(token_embedding, masked_entities, code):
+            embedding = []
+            current_idx= 0
+            for i, mask in enumerate(masked_entities):
+                if mask == code:
+                    if i!= current_idx-1: #get first embedding
+                        embedding.append(token_embedding[i])
+                    current_idx = i
+            return torch.stack(embedding)
+
+        def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
+            chemical_codes = []
+            disease_codes = []
+            for i in range(chemical_code_list_encoded):
+                for j in range(disease_code_list_encoded):
+                    chemical_codes.append(chemical_code_list_encoded[i])
+                    disease_codes.append(disease_code_list_encoded[j])
+            return chemical_codes, disease_codes
+
+
+
         # def get_entity_embedding(token_embedding, masked_entities, code):
         #     count = 0
         #     embedding = torch.zeros(token_embedding.shape[1]).cuda()
@@ -536,7 +558,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
 
         batch_embedding = []
 
-        if not used_entity_token:
+        if not is_full_sample:
             for i in range(batch_size):
                 masked_entities = masked_entities_list[i]
                 chemical_code = chemical_code_list[i]
@@ -549,27 +571,37 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                 entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
                 # print(entity_embedding.shape)
                 batch_embedding.append(entity_embedding.tolist())
-        # else:
-        #     for i in range(batch_size):
-        #         masked_entities = masked_entities_list[i]
-        #         chemical_code = chemical_code_list[i]
-        #         disease_code = disease_code_list[i]
-        #         token_embedding = sequence_output[i]
-        #         chemical_embedding = get_entity_embedding(token_embedding, masked_entities, chemical_code)
-        #         disease_embedding = get_entity_embedding(token_embedding, masked_entities, disease_code)
-        #         # print('chemical_embedding shape: ', chemical_embedding.shape)
-        #         # print('disease_embedding shape: ', disease_embedding.shape)
-        #         entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
-        #         # print(entity_embedding.shape)
-        #         batch_embedding.append(entity_embedding.tolist())
-        batch_embedding = torch.tensor(batch_embedding).cuda()
-        sequence_output_cls = batch_embedding
-        x = self.dropout(sequence_output_cls)
-        x = self.dense(x)
-        x = get_activation("gelu")(x)  # although BERT uses tanh here, it seems Electra authors used gelu here
-        x = self.dropout(x)
-        x = self.out_proj(x)
-        return x
+            batch_embedding = torch.tensor(batch_embedding).cuda()
+            sequence_output_cls = batch_embedding
+            x = self.dropout(sequence_output_cls)
+            x = self.dense(x)
+            x = get_activation("gelu")(x)  # although BERT uses tanh here, it seems Electra authors used gelu here
+            x = self.dropout(x)
+            x = self.out_proj(x)
+            return x
+        else:
+            batch_embedding = []
+            for i in range(batch_size):
+                masked_entities = masked_entities_list[i]
+                chemical_codes, disease_codes = generate_code_pairs_list(chemical_code_list[i], disease_code_list[i])
+                token_embedding = sequence_output[i]
+                current_output = []
+                for j in range(len(chemical_codes)):
+                    chemical_embeddings = get_all_entity_embedding(token_embedding, masked_entities, chemical_codes[j])
+                    disease_embeddings = get_all_entity_embedding(token_embedding, masked_entities, disease_codes[j])
+                    chemical_embedding = torch.mean(chemical_embeddings, dim=0)
+                    disease_embedding = torch.mean(disease_embeddings, dim=0)
+                    current_output.append(torch.cat([chemical_embedding, disease_embedding], 0))
+                batch_embedding.append(torch.stack(current_output))
+            batch_embedding = torch.cat(batch_embedding, 0)
+            sequence_output_cls = batch_embedding
+            x = self.dropout(sequence_output_cls)
+            x = self.dense(x)
+            x = get_activation("gelu")(x)  # although BERT uses tanh here, it seems Electra authors used gelu here
+            x = self.dropout(x)
+            x = self.out_proj(x)
+            print("x shape: ", x.size())
+            return x
 
 
 class ElectraModelEntityTokenClassification(ElectraPreTrainedModel):

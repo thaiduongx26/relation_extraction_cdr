@@ -6,7 +6,7 @@ from transformers import AdamW
 
 from models.electra_model import ElectraModelClassification, ElectraModelSentenceClassification, ElectraModelEntitySentenceClassification, ElectraModelEntityTokenClassification
 from transformers import ElectraConfig
-from data_loaders.cdr_dataset import make_cdr_train_non_global_dataset, make_cdr_non_global_dataset, make_train_pretrain_ner_dataset, make_pretrain_ner_dataset
+from data_loaders.cdr_dataset import make_cdr_train_non_global_dataset, make_cdr_non_global_dataset, make_train_pretrain_ner_dataset, make_pretrain_ner_dataset, make_train_joinlabel_dataset
 from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
@@ -20,7 +20,8 @@ import os
 
 # os.environ["CUDA_VISIBLE_DEVICES"]="0,1,2,3"
 cuda = torch.cuda.is_available()
-torch.cuda.set_device(0)
+if cuda:
+    torch.cuda.set_device(0)
 print('cuda is_available: ', cuda)
 
 
@@ -207,9 +208,17 @@ def evaluate_sentence(net, test_loader, tokenizer):
     print("Testing Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
     return classification_report(new_all_labels, new_all_preds, output_dict=True)['1']
 
-def train_sentence(num_epochs=100, use_entity_token=False):
+
+
+def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sample = False):
     best_test_results = None
     best_epoch = None
+    from models import src_path
+
+    if train_with_full_sample:
+        train_data_full, train_loader_full = make_train_joinlabel_dataset(src_path + '/data/cdr/CDR_TrainingSet.PubTator.txt',
+                                                                dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt',
+                                                                use_entity_token=True)
     _, train_loader = make_cdr_train_non_global_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=8)
     _, test_loader = make_cdr_non_global_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=8)
     # _, train_loader = make_cdr_non_global_dataset('data/cdr/CDR_TrainingSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
@@ -284,6 +293,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
             optimizer.step()
             optimizer.zero_grad()
 
+
             
         # scheduler.step()
             
@@ -301,6 +311,61 @@ def train_sentence(num_epochs=100, use_entity_token=False):
         if do_eval:
             res = evaluate_sentence(model, test_loader, tokenizer)
             return res
+
+    def train_full_sample(model, loss_fn=None, optimizer=None, scheduler=None, tokenizer=None):
+        model.train()
+        epoch_loss = []
+        all_labels = []
+        all_preds = []
+        for i, batch in enumerate(train_loader_full):
+            x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
+            print('label = ', label)
+            print("label_size: ", label.size())
+            # label = torch.squeeze(label, 1)
+            # print('x: ', x)
+            attention_mask = (x != pad_id).float()
+            # attention_mask = (1. - attention_mask) * -10000.
+            token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
+            if cuda:
+                x = x.cuda()
+                label = label.cuda()
+                attention_mask = attention_mask.cuda()
+                token_type_ids = token_type_ids.cuda()
+
+            prediction = model(x, token_type_ids=token_type_ids,
+                               attention_mask=attention_mask,
+                               used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs,
+                               chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs,
+                               is_full_sample= True)
+            loss = loss_fn(prediction.view(-1, 2), label.view(-1))
+            # if (i % 100 == 0):
+            #     print('label: ', label)
+            #     print('pred: ', prediction)
+            #     print('loss: ', loss)
+
+            pred = prediction.argmax(dim=-1)
+            all_labels.append(label.data.to('cpu'))
+            all_preds.append(pred.to('cpu'))
+
+            epoch_loss.append(loss.item())
+
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+
+        # scheduler.step()
+
+        average_loss = np.mean(epoch_loss)
+        new_all_labels = []
+        new_all_preds = []
+        for i in range(len(all_labels)):
+            new_all_labels += all_labels[i].tolist()
+            new_all_preds += all_preds[i].tolist()
+
+        from sklearn.metrics import classification_report
+        print("average RE loss : ", average_loss)
+        print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
+        print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
 
     # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
     no_decay = ["bias", "LayerNorm.weight"]
@@ -323,6 +388,7 @@ def train_sentence(num_epochs=100, use_entity_token=False):
         do_eval = False
         if epoch % 1 == 0 or epoch == num_epochs - 1:
             do_eval = True
+        train_full_sample(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer)
         res_test = train_model(net, loss_fn=criteria, optimizer=optimizer, scheduler=None, tokenizer=tokenizer, do_eval=do_eval)
         if best_test_results == None or res_test['f1-score'] > best_test_results['f1-score']:
             best_test_results = res_test
