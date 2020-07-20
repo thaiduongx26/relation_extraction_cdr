@@ -71,6 +71,9 @@ class PadSequenceCDRFulltextJoinLabelDataset():
     def __init__(self, token_pad_value, masked_entities_pad_value=-1, masked_chemical_code_list_encoded=-1, masked_disease_code_list_encoded=-1, masked_label_list=-1):
         self.token_pad_value = token_pad_value
         self.masked_entities_pad_value = masked_entities_pad_value
+        self.masked_chemical_code_list_encoded = masked_chemical_code_list_encoded
+        self.masked_disease_code_list_encoded = masked_disease_code_list_encoded
+        self.masked_label_list = masked_label_list
         
 
     def __call__(self, batch):
