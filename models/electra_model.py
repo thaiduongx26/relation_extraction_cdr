@@ -524,6 +524,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
         def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
             chemical_codes = []
             disease_codes = []
+            print("chemical_code_list_encoded: ", chemical_code_list_encoded.size())
             for i in range(chemical_code_list_encoded):
                 for j in range(disease_code_list_encoded):
                     chemical_codes.append(chemical_code_list_encoded[i])
