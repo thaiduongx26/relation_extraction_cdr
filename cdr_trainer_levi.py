@@ -534,4 +534,4 @@ def train_ner(num_epochs=100, use_entity_token=False):
         print('Best epoch = ', best_epoch)
 
 if __name__ == '__main__':
-    train_sentence(num_epochs=1000, use_entity_token=True)
+    train_sentence(num_epochs=1000, use_entity_token=True, train_with_full_sample= True)
