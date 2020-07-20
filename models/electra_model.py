@@ -599,6 +599,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                 for j in range(len(chemical_codes)):
                     chemical_embeddings = get_all_entity_embedding(token_embedding, masked_entities, chemical_codes[j])
                     disease_embeddings = get_all_entity_embedding(token_embedding, masked_entities, disease_codes[j])
+                    print("disease_embeddings size: ", disease_embeddings.size())
                     chemical_embedding = torch.mean(chemical_embeddings, dim=0)
                     disease_embedding = torch.mean(disease_embeddings, dim=0)
                     current_output.append(torch.cat([chemical_embedding, disease_embedding], 0))
