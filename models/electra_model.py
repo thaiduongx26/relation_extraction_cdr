@@ -520,12 +520,14 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     if i!= current_idx-1: #get first embedding
                         embedding.append(token_embedding[i])
                     current_idx = i
+            print("embedding: ", embedding_size)
             if len(embedding) == 0:
                 embedding= [torch.zeros((embedding_size,))]
                 if torch.cuda.is_available():
                     embedding =torch.stack( embedding).cuda()
             else:
                 embedding = torch.stack(embedding)
+            print("embedding out: ", embedding.size())
             return embedding
 
         def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
