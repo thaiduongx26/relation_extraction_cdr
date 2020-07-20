@@ -522,7 +522,11 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     current_idx = i
             if len(embedding) == 0:
                 embedding= [torch.zeros((embedding_size,))]
-            return torch.stack(embedding)
+                if torch.cuda.is_available():
+                    embedding =torch.stack( embedding).cuda()
+            else:
+                embedding = torch.stack(embedding)
+            return embedding
 
         def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
             chemical_codes = []
