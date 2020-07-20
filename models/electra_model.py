@@ -512,6 +512,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
             return embedding
 
         def get_all_entity_embedding(token_embedding, masked_entities, code):
+            embedding_size = list(token_embedding.size())[-1]
             embedding = []
             current_idx= 0
             for i, mask in enumerate(masked_entities):
@@ -519,6 +520,8 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     if i!= current_idx-1: #get first embedding
                         embedding.append(token_embedding[i])
                     current_idx = i
+            if len(embedding) == 0:
+                embedding= [torch.zeros((embedding_size,))]
             return torch.stack(embedding)
 
         def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
