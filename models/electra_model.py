@@ -533,15 +533,20 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
         def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
             chemical_codes = []
             disease_codes = []
-            print("chemical_code_list_encoded: ", chemical_code_list_encoded.size())
-            print("chemical_code_list_encoded: ", chemical_code_list_encoded)
-            1/0
             chemical_code_size = list(chemical_code_list_encoded.size())
             disease_code_size = list(disease_code_list_encoded.size())
+            tensor_size = chemical_code_size[0]*disease_code_size[0]
             for i in range(chemical_code_size[0]):
+                if chemical_code_list_encoded[i] == -1:
+                    break
                 for j in range(disease_code_size[0]):
+                    if disease_code_list_encoded[j] == -1:
+                        break
                     chemical_codes.append(chemical_code_list_encoded[i])
                     disease_codes.append(disease_code_list_encoded[j])
+            for i in range(len(chemical_codes), tensor_size):
+                chemical_codes.append(-1)
+                disease_codes.append(-1)
             return chemical_codes, disease_codes
 
 
