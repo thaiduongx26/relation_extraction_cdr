@@ -339,8 +339,7 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
                                chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs,
                                is_full_sample= True, label_length = list(label.size())[-1])
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
-            if (i % 100 == 0):
-                print('loss: ', loss)
+            print(f"{i}: {loss.data}")
 
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
