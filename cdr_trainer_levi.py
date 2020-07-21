@@ -343,7 +343,7 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
             # if (i % 100 == 0):
             #     print('label: ', label)
             #     print('pred: ', prediction)
-            #     print('loss: ', loss)
+            print('loss: ', loss)
 
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
