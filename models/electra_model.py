@@ -526,8 +526,6 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     embedding =torch.stack( embedding).cuda()
             else:
                 embedding = torch.stack(embedding)
-                print("code: ", code)
-                print("embedding: ", embedding.size())
             return embedding
 
         def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
@@ -611,21 +609,16 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     chemical_embedding = torch.mean(chemical_embeddings, dim=0)
                     disease_embedding = torch.mean(disease_embeddings, dim=0)
                     r_rep = torch.cat([chemical_embedding, disease_embedding], 0)
-                    print("disease_embeddings size: ", disease_embedding.size())
-                    print("r_rep: ", r_rep.size())
-                    print("len chemical_codes: ", len(chemical_codes))
                     current_output.append(r_rep)
                 current_output_stacked = torch.stack(current_output).unsqueeze(0)
                 batch_embedding.append(current_output_stacked)
             batch_embedding = torch.cat(batch_embedding, 0)
-            print("batch_embedding_size: ", batch_embedding.size())
             sequence_output_cls = batch_embedding
             x = self.dropout(sequence_output_cls)
             x = self.dense(x)
             x = get_activation("gelu")(x)  # although BERT uses tanh here, it seems Electra authors used gelu here
             x = self.dropout(x)
             x = self.out_proj(x)
-            print("x shape: ", x.size())
             return x
 
 

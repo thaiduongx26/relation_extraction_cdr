@@ -320,8 +320,11 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
         label_pad_id = -1
         for i, batch in enumerate(train_loader_full):
             x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
-            print('label = ', label)
-            print("label_size: ", label.size())
+
+            print("label shape: ", label.size())
+            print("chemical_code_seqs ", chemical_code_seqs.size())
+            print("disease_code_seqs ", disease_code_seqs.size())
+            1/0
             # label = torch.squeeze(label, 1)
             # print('x: ', x)
             attention_mask = (x != pad_id).float()
@@ -339,8 +342,6 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
                                used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs,
                                chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs,
                                is_full_sample= True)
-            print("prediction shape: ", prediction.size())
-            print("label shape: ", label.size())
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
             # if (i % 100 == 0):
             #     print('label: ', label)
