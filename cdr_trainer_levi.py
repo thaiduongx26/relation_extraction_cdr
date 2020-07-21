@@ -250,7 +250,7 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
     if cuda:
         net.cuda()
 
-    criteria = torch.nn.CrossEntropyLoss().cuda()
+    criteria = torch.nn.CrossEntropyLoss(ignore_index=-1).cuda()
 
     pad_id = tokenizer.pad_token_id
 
