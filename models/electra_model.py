@@ -546,7 +546,6 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
             for i in range(len(chemical_codes), label_len):
                 chemical_codes.append(-1)
                 disease_codes.append(-1)
-            print("label_len: ", label_len)
             return chemical_codes, disease_codes
 
 
