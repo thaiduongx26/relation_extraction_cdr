@@ -528,7 +528,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                 print("embedding out zero: ", embedding.size())
             else:
                 embedding = torch.stack(embedding)
-                print("embedding out: ", embedding.size())
+                print("embedding: ", embedding.size())
             return embedding
 
         def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
