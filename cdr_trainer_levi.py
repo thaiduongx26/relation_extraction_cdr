@@ -324,6 +324,9 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
             print("label shape: ", label.size())
             print("chemical_code_seqs ", chemical_code_seqs.size())
             print("disease_code_seqs ", disease_code_seqs.size())
+            print("label[0]: ", label[0])
+            print("chemical_code_seqs[0]: ", chemical_code_seqs[0])
+            print("disease_code_seqs[0]: ", disease_code_seqs[0])
             1/0
             # label = torch.squeeze(label, 1)
             # print('x: ', x)
