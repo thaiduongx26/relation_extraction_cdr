@@ -520,14 +520,13 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     if i!= current_idx-1: #get first embedding
                         embedding.append(token_embedding[i])
                     current_idx = i
-            print("embedding: ", embedding_size)
             if len(embedding) == 0:
                 embedding= [torch.zeros(embedding_size)]
                 if torch.cuda.is_available():
                     embedding =torch.stack( embedding).cuda()
-                print("embedding out zero: ", embedding.size())
             else:
                 embedding = torch.stack(embedding)
+                print("code: ", code)
                 print("embedding: ", embedding.size())
             return embedding
 
