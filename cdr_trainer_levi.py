@@ -318,14 +318,13 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
         all_labels = []
         all_preds = []
         label_pad_id = -1
+        average_loss = []
         for i, batch in enumerate(train_loader_full):
             x, masked_entities_encoded_seqs, chemical_code_seqs, disease_code_seqs, label = batch
 
-            print("label shape: ", label.size())
             # label = torch.squeeze(label, 1)
             # print('x: ', x)
             attention_mask = (x != pad_id).float()
-            label_mask = (label != label_pad_id).float()
             # attention_mask = (1. - attention_mask) * -10000.
             token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
             if cuda:
@@ -340,10 +339,8 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
                                chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs,
                                is_full_sample= True, label_length = list(label.size())[-1])
             loss = loss_fn(prediction.view(-1, 2), label.view(-1))
-            # if (i % 100 == 0):
-            #     print('label: ', label)
-            #     print('pred: ', prediction)
-            print('loss: ', loss)
+            if (i % 100 == 0):
+                print('loss: ', loss)
 
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data.to('cpu'))
@@ -365,7 +362,7 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
             new_all_preds += all_preds[i].tolist()
 
         from sklearn.metrics import classification_report
-        print("average RE loss : ", average_loss)
+        print("average Full sentence loss : ", average_loss)
         print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
         print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
 
