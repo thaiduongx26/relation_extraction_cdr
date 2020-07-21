@@ -534,6 +534,8 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
             chemical_codes = []
             disease_codes = []
             print("chemical_code_list_encoded: ", chemical_code_list_encoded.size())
+            print("chemical_code_list_encoded: ", chemical_code_list_encoded)
+            1/0
             chemical_code_size = list(chemical_code_list_encoded.size())
             disease_code_size = list(disease_code_list_encoded.size())
             for i in range(chemical_code_size[0]):
