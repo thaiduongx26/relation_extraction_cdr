@@ -615,9 +615,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                     print("r_rep: ", r_rep.size())
                     print("len chemical_codes: ", len(chemical_codes))
                     current_output.append(r_rep)
-                current_output_stacked = torch.stack(current_output)
-                print("current_output_stacked: ", current_output_stacked.size())
-                1/0
+                current_output_stacked = torch.stack(current_output).unsqueeze(0)
                 batch_embedding.append(current_output_stacked)
             batch_embedding = torch.cat(batch_embedding, 0)
             print("batch_embedding_size: ", batch_embedding.size())
