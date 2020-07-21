@@ -433,6 +433,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
         chemical_code_list=None,
         disease_code_list=None,
         is_full_sample= False,
+        label_length = 0,
     ):
         r"""
     Return:
@@ -528,7 +529,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                 embedding = torch.stack(embedding)
             return embedding
 
-        def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded):
+        def generate_code_pairs_list(chemical_code_list_encoded, disease_code_list_encoded, label_len):
             chemical_codes = []
             disease_codes = []
             chemical_code_size = list(chemical_code_list_encoded.size())
@@ -542,9 +543,10 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
                         break
                     chemical_codes.append(chemical_code_list_encoded[i])
                     disease_codes.append(disease_code_list_encoded[j])
-            for i in range(len(chemical_codes), tensor_size):
+            for i in range(len(chemical_codes), label_len):
                 chemical_codes.append(-1)
                 disease_codes.append(-1)
+            print("label_len: ", label_len)
             return chemical_codes, disease_codes
 
 
@@ -600,7 +602,7 @@ class ElectraModelEntitySentenceClassification(ElectraPreTrainedModel):
             batch_embedding = []
             for i in range(batch_size):
                 masked_entities = masked_entities_list[i]
-                chemical_codes, disease_codes = generate_code_pairs_list(chemical_code_list[i], disease_code_list[i])
+                chemical_codes, disease_codes = generate_code_pairs_list(chemical_code_list[i], disease_code_list[i], label_length)
                 token_embedding = sequence_output[i]
                 current_output = []
                 for j in range(len(chemical_codes)):
