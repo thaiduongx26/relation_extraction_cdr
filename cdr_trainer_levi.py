@@ -357,8 +357,8 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
         new_all_labels = []
         new_all_preds = []
         for i in range(len(all_labels)):
-            new_all_labels += all_labels[i].tolist()
-            new_all_preds += all_preds[i].tolist()
+            new_all_labels.extend( all_labels[i].tolist())
+            new_all_preds.extend( all_preds[i].tolist())
 
         from sklearn.metrics import classification_report
         print("average Full sentence loss : ", average_loss)
