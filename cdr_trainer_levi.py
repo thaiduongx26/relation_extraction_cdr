@@ -218,9 +218,10 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
     if train_with_full_sample:
         train_data_full, train_loader_full = make_train_joinlabel_dataset(src_path + '/data/cdr/CDR_TrainingSet.PubTator.txt',
                                                                 dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt',
-                                                                use_entity_token=True)
-    _, train_loader = make_cdr_train_non_global_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=8)
-    _, test_loader = make_cdr_non_global_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=8)
+                                                                use_entity_token=True,
+                                                                batch_size=4)
+    _, train_loader = make_cdr_train_non_global_dataset(train_path='data/cdr/CDR_TrainingSet.PubTator.txt', dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=4)
+    _, test_loader = make_cdr_non_global_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=4)
     # _, train_loader = make_cdr_non_global_dataset('data/cdr/CDR_TrainingSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
 
     tokenizer = get_tokenizer()
