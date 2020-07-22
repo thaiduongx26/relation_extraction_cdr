@@ -363,8 +363,8 @@ def train_sentence(num_epochs=100, use_entity_token=False, train_with_full_sampl
 
         from sklearn.metrics import classification_report
         print("average Full sentence loss : ", average_loss)
-        print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
-        print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
+        # print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
+        # print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
 
     # optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.01}])
     no_decay = ["bias", "LayerNorm.weight"]
