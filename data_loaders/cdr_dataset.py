@@ -676,4 +676,4 @@ class CDRFulltextJoinLabelDataset(Dataset):
         chemical_code_list_encoded = self.data[idx]['chemical_code_list_encoded']
         disease_code_list_encoded = self.data[idx]['disease_code_list_encoded']
         label_list = self.data[idx]['label_list']
-        return torch.tensor(text_tokenized), torch.tensor(masked_entities_encoded), torch.tensor(chemical_code_list_encoded), torch.tensor(disease_code_list_encoded), torch.tensor(label_list)
+        return torch.tensor(text_tokenized), torch.tensor(masked_entities_encoded), torch.tensor(chemical_code_list_encoded), torch.tensor(disease_code_list_encoded), torch.tensor(label_list, dtype=torch.long)
