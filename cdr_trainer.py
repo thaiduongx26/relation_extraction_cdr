@@ -20,7 +20,8 @@ import os
 
 # os.environ["CUDA_VISIBLE_DEVICES"]="0,1,2,3"
 cuda = torch.cuda.is_available()
-torch.cuda.set_device(0)
+if cuda:
+    torch.cuda.set_device(0)
 print('cuda is_available: ', cuda)
 
 
