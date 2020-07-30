@@ -77,7 +77,7 @@ def train(num_epochs=100):
     tokenizer.add_tokens('</e>')
     # electra_config = ElectraConfig()
     # net = ElectraModelClassification(electra_config)
-    net = ElectraModelClassificationALPS.from_pretrained('models_saved/Electra_converted_pytorch', args={'reprocess_input_data': True})
+    net = ElectraModelClassificationALPS.from_pretrained('models_saved/Electra_converted_pytorch')
     net.resize_token_embeddings(len(tokenizer))
 
     for name, param in net.named_parameters():
