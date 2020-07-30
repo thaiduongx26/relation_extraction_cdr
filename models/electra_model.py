@@ -318,9 +318,6 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
         disease_code_list=None,
         other_code_list=None
     ):
-        print("other_code_list.shape: ", other_code_list.shape)
-        print("disease_code_list.shape: ", disease_code_list.shape)
-        print("chemical_code_list.shape: ", chemical_code_list.shape)
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
 
         if input_ids is not None and inputs_embeds is not None:
@@ -341,7 +338,6 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
 
         extended_attention_mask = self.get_extended_attention_mask(attention_mask, input_shape, device)
         head_mask = self.get_head_mask(head_mask, self.config.num_hidden_layers)
-        print('input_ids: ', input_ids.shape)
 
         hidden_states = self.embeddings(
             input_ids=input_ids, position_ids=position_ids, token_type_ids=token_type_ids, inputs_embeds=inputs_embeds
@@ -358,10 +354,8 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
         )
 
         batch_size = chemical_code_list.shape[0]
-        print('batch_size: ', batch_size)
 
         token_embedding_output = hidden_states[0]
-        print('token_embedding_output: ', token_embedding_output.shape)
         
         def get_entity_embedding(token_embedding, masked_entities, code):
             count = 0
@@ -377,7 +371,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                         embedding = token_embedding[i]
                     else:
                         embedding += token_embedding[i]
-                    print('embedding shape: ', embedding.shape)
+                    # print('embedding shape: ', embedding.shape)
                     return token_embedding[i]
                 else:
                     check = True
@@ -385,24 +379,11 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
             embedding = embedding / count
             return embedding
 
-        # def get_entity_token_embedding(token_embedding, masked_entities, code):
-        #     count = 0
-        #     embedding = torch.zeros(token_embedding.shape[1]).cuda()
-        #     check = True
-        #     for i, mask in enumerate(masked_entities):
-        #         if mask == code and check:
-        #             count += 1
-        #             embedding += token_embedding[i]
-        #         else:
-        #             if 
-        #     # embedding = embedding / count
-        #     return embedding
 
         batch_embedding = []
 
         if not used_entity_token:
             for i in range(batch_size):
-                print('step ', i)
                 masked_entities = masked_entities_list[i]
                 chemical_code = chemical_code_list[i]
                 disease_code = disease_code_list[i]
@@ -422,7 +403,6 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                     entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
 
                 batch_embedding.append(entity_embedding.tolist())
-                print('batch: ', len(batch_embedding))
         batch_embedding = torch.tensor(batch_embedding)
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
