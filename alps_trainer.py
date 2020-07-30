@@ -77,7 +77,7 @@ def train(num_epochs=100):
     tokenizer.add_tokens('</e>')
     # electra_config = ElectraConfig()
     # net = ElectraModelClassification(electra_config)
-    net = ElectraModelClassificationALPS.from_pretrained('models_saved/Electra_converted_pytorch')
+    net = ElectraModelClassificationALPS.from_pretrained('models_saved/Electra_converted_pytorch', args={'reprocess_input_data': True})
     net.resize_token_embeddings(len(tokenizer))
 
     for name, param in net.named_parameters():
@@ -109,7 +109,8 @@ def train(num_epochs=100):
             #     attention_mask = attention_mask.cuda()
             #     token_type_ids = token_type_ids.cuda()
 
-            prediction = model(x, token_type_ids=token_type_ids, 
+            prediction = model(x, 
+                                # token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
                                   chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs, other_code_list=other_code_seqs)
