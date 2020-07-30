@@ -140,7 +140,7 @@ def train(num_epochs=100):
         print("train_cls report: \n", classification_report(new_all_labels, new_all_preds))
         print("Confusion matrix report: \n", confusion_matrix(new_all_labels, new_all_preds))
         if do_eval:
-            evaluate(model, test_loader, tokenizer)
+            return evaluate(model, test_loader, tokenizer)
 
     optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.00001}])
     for epoch in range(num_epochs):
