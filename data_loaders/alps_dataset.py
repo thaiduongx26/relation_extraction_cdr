@@ -113,8 +113,7 @@ class ALPS_Sample():
             e_end_last_idx = [i for i in range(len(subset)) if subset[i] == e_end_ids]
             end_idx = e_end_last_idx[-1] + 1
             text_tokenized = text_tokenized[0: end_idx]
-        # print('text_tokenized: ', text_tokenized)
-        # print('text_tokenized_tokens: ', self.tokenize.convert_ids_to_tokens(text_tokenized))
+        
         ids = 0
         entity_check = 0
         while ids < len(text_tokenized):
@@ -196,7 +195,7 @@ class ALPS_Sample():
                             # print('disease_code: ', disease_code)
                             final_sample.append({
                                 'text_tokenized': text_tokenized,
-                                'masked_entities': masked_entities,
+                                'masked_entities': masked_entities_encoded,
                                 'chemical_code': -1,
                                 'disease_code': le.transform([disease_code])[0],
                                 'other_code': le.transform([other_code])[0],
@@ -206,7 +205,7 @@ class ALPS_Sample():
                             # print('check')
                             final_sample.append({
                                 'text_tokenized': text_tokenized,
-                                'masked_entities': masked_entities,
+                                'masked_entities': masked_entities_encoded,
                                 'chemical_code': -1,
                                 'disease_code': le.transform([disease_code])[0],
                                 'other_code': le.transform([other_code])[0],
@@ -220,7 +219,7 @@ class ALPS_Sample():
                             # print('chemical_code: ', chemical_code)
                             final_sample.append({
                                 'text_tokenized': text_tokenized,
-                                'masked_entities': masked_entities,
+                                'masked_entities': masked_entities_encoded,
                                 'chemical_code': le.transform([chemical_code])[0],
                                 'disease_code': -1,
                                 'other_code': le.transform([other_code])[0],
@@ -230,7 +229,7 @@ class ALPS_Sample():
                             # print('check')
                             final_sample.append({
                                 'text_tokenized': text_tokenized,
-                                'masked_entities': masked_entities,
+                                'masked_entities': masked_entities_encoded,
                                 'chemical_code': le.transform([chemical_code])[0],
                                 'disease_code': -1,
                                 'other_code': le.transform([other_code])[0],
