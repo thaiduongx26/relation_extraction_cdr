@@ -390,14 +390,14 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
         
         def get_entity_embedding(token_embedding, masked_entities, code):
             count = 0
-            embedding = torch.zeros(token_embedding.shape[1]).cpu()
+            embedding = torch.zeros(token_embedding.shape[1]).gpu()
             check = True
             for i, mask in enumerate(masked_entities):
                 if mask == code:
                     if check:
                         count += 1
                         check = False
-                    embedding += token_embedding[i].cpu()
+                    embedding += token_embedding[i]
                 else:
                     check = True
 
