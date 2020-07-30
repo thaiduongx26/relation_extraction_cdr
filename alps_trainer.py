@@ -142,7 +142,7 @@ def train(num_epochs=100):
         if do_eval:
             return evaluate(model, test_loader, tokenizer)
 
-    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.00000001}])
+    optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.0000000001}])
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
         criteria = torch.nn.CrossEntropyLoss()
