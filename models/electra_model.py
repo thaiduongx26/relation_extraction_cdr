@@ -361,7 +361,6 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
             count = 0
             embedding = None
             check = True
-            print(token_embedding.shape)
             for i, mask in enumerate(masked_entities):
                 if mask == code:
                     if check:
