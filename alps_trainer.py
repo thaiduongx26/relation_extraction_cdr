@@ -145,7 +145,7 @@ def train(num_epochs=100):
     optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.00000001}])
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
-        criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.convert_tokens_to_ids('[PAD]'))
+        criteria = torch.nn.CrossEntropyLoss()
         do_eval = False
         if epoch % 1 == 0 or epoch == num_epochs - 1:
             do_eval = True
