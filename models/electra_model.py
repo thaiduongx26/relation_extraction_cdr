@@ -387,6 +387,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
 
         batch_size = chemical_code_list.shape[0]
         token_embedding_output = hidden_states[0]
+        print('token_embedding_output: ', token_embedding_output.shape)
         
         def get_entity_embedding(token_embedding, masked_entities, code):
             count = 0
