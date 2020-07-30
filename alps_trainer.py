@@ -86,7 +86,7 @@ def train(num_epochs=100):
     if cuda:
         net.cuda()
 
-    criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.convert_tokens_to_ids('[PAD]'))
+    
 
     pad_id = tokenizer.convert_tokens_to_ids('[PAD]')
 
@@ -145,6 +145,7 @@ def train(num_epochs=100):
     optimizer = torch.optim.Adam([{"params": net.parameters(), "lr": 0.000000001}])
     for epoch in range(num_epochs):
         print('Epoch:', epoch)
+        criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.convert_tokens_to_ids('[PAD]'))
         do_eval = False
         if epoch % 1 == 0 or epoch == num_epochs - 1:
             do_eval = True
