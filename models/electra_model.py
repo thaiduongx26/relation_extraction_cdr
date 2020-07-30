@@ -397,7 +397,8 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                     if check:
                         count += 1
                         check = False
-                    embedding += token_embedding[i]
+                    # embedding += token_embedding[i]
+                    return token_embedding[i]
                 else:
                     check = True
 
