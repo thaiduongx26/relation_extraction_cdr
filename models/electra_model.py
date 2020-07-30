@@ -390,7 +390,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
         
         def get_entity_embedding(token_embedding, masked_entities, code):
             count = 0
-            embedding = torch.zeros(token_embedding.shape[1]).cuda()
+            embedding = torch.zeros(token_embedding.shape[1]).to('gpu')
             check = True
             for i, mask in enumerate(masked_entities):
                 if mask == code:
