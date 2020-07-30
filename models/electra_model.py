@@ -425,7 +425,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                 chemical_code = chemical_code_list[i]
                 disease_code = disease_code_list[i]
                 other_code = other_code_list[i]
-                token_embedding = token_embedding_output[i]
+                token_embedding = token_embedding_output[i].to('cpu')
                 if chemical_code == -1:
                     other_embedding = get_entity_embedding(token_embedding, masked_entities, other_code)
                     disease_embedding = get_entity_embedding(token_embedding, masked_entities, disease_code)
