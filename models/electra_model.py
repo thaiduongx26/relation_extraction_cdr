@@ -427,6 +427,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
 
         if not used_entity_token:
             for i in range(batch_size):
+                print('step ', i)
                 masked_entities = masked_entities_list[i]
                 chemical_code = chemical_code_list[i]
                 disease_code = disease_code_list[i]
