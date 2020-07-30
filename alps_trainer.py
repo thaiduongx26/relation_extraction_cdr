@@ -114,7 +114,7 @@ def train(num_epochs=100):
                                   used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
                                   chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs, other_code_list=other_code_seqs)
             # print('learned before = {}'.format(net.projection.weight.data))
-            loss = criteria(prediction, label)
+            loss = criteria(prediction.view(-1, 2), label.view(-1))
             pred = prediction.argmax(dim=-1)
             all_labels.append(label.data)
             all_preds.append(pred)

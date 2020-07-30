@@ -405,7 +405,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
         x = self.dense(x)
-        x = get_activation("gelu")(x) 
+        x = get_activation("tanh")(x) 
         x = self.dropout(x)
         x = self.out_proj(x)
         return x
