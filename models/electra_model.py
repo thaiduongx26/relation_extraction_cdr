@@ -402,6 +402,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                         embedding = token_embedding[i]
                     else:
                         embedding += token_embedding[i]
+                    print('embedding shape: ', embedding.shape)
                     return token_embedding[i]
                 else:
                     check = True
