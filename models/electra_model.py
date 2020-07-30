@@ -341,6 +341,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
 
         extended_attention_mask = self.get_extended_attention_mask(attention_mask, input_shape, device)
         head_mask = self.get_head_mask(head_mask, self.config.num_hidden_layers)
+        print('input_ids: ', input_ids.shape)
 
         hidden_states = self.embeddings(
             input_ids=input_ids, position_ids=position_ids, token_type_ids=token_type_ids, inputs_embeds=inputs_embeds
