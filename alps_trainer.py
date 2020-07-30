@@ -40,13 +40,12 @@ def evaluate(net, test_loader, tokenizer):
         token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
         if cuda:
             x = x.cuda()
-            attention_mask = attention_mask.cuda()
-            token_type_ids = token_type_ids.cuda()
         
-        prediction = net(x, token_type_ids=token_type_ids, 
-                                # attention_masks=attention_mask,
-                                  used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
-                                  chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs, other_code_list=other_code_seqs)
+        prediction = net(x, 
+                        # token_type_ids=token_type_ids, 
+                        # attention_masks=attention_mask,
+                            used_entity_token=False, masked_entities_list=masked_entities_encoded_seqs, 
+                            chemical_code_list=chemical_code_seqs, disease_code_list=disease_code_seqs, other_code_list=other_code_seqs)
         prediction.to('cpu')
         pred_label = prediction.argmax(dim=1).to('cpu')
         
@@ -117,8 +116,8 @@ def train(num_epochs=100):
             # print('learned before = {}'.format(net.projection.weight.data))
             loss = criteria(prediction, label)
             pred = prediction.argmax(dim=-1)
-            all_labels.append(label.data.to('cpu'))
-            all_preds.append(pred.to('cpu'))
+            all_labels.append(label.data)
+            all_preds.append(pred)
             
             epoch_loss.append(loss.item())
 

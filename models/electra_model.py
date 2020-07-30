@@ -372,7 +372,6 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                     else:
                         embedding += token_embedding[i]
                     # print('embedding shape: ', embedding.shape)
-                    return token_embedding[i]
                 else:
                     check = True
 
@@ -403,7 +402,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                     entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
 
                 batch_embedding.append(entity_embedding.tolist())
-        batch_embedding = torch.tensor(batch_embedding)
+        batch_embedding = torch.tensor(batch_embedding).cuda()
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
         x = self.dense(x)
