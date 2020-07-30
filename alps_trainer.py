@@ -11,7 +11,7 @@ from tqdm import tqdm
 from utils.trainer_utils import get_tokenizer
 from torch.optim.lr_scheduler import StepLR
 import torch.optim as optim
-from optim import optim4GPU
+# from optim import optim4GPU
 # from torchsummary import summary
 from sklearn.metrics import confusion_matrix
 import numpy as np
@@ -38,10 +38,10 @@ def evaluate(net, test_loader, tokenizer):
         attention_mask = (x != pad_id).float()
         attention_mask = (1. - attention_mask) * -10000.
         token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
-        if cuda:
-            x = x.cuda()
-            attention_mask = attention_mask.cuda()
-            token_type_ids = token_type_ids.cuda()
+        # if cuda:
+        #     x = x.cuda()
+        #     attention_mask = attention_mask.cuda()
+        #     token_type_ids = token_type_ids.cuda()
         
         prediction = net(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,
@@ -84,8 +84,8 @@ def train(num_epochs=100):
         # if 'encoder' in name:
             # param.requires_grad = False
         print("name: {}, unfrozen:{}, size: {}".format(name, param.requires_grad, param.size()))
-    if cuda:
-        net.cuda()
+    # if cuda:
+    #     net.cuda()
 
     criteria = torch.nn.CrossEntropyLoss(ignore_index=tokenizer.convert_tokens_to_ids('[PAD]'))
 
@@ -103,11 +103,11 @@ def train(num_epochs=100):
             attention_mask = (x != pad_id).float()
             attention_mask = (1. - attention_mask) * -10000.
             token_type_ids = torch.zeros((x.shape[0], x.shape[1])).long()
-            if cuda:
-                x = x.cuda()
-                label = label.cuda()
-                attention_mask = attention_mask.cuda()
-                token_type_ids = token_type_ids.cuda()
+            # if cuda:
+            #     x = x.cuda()
+            #     label = label.cuda()
+            #     attention_mask = attention_mask.cuda()
+            #     token_type_ids = token_type_ids.cuda()
 
             prediction = model(x, token_type_ids=token_type_ids, 
                                 # attention_masks=attention_mask,

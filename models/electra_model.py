@@ -448,7 +448,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
 
                 batch_embedding.append(entity_embedding.tolist())
                 print('batch: ', len(batch_embedding))
-        batch_embedding = torch.tensor(batch_embedding).cuda()
+        batch_embedding = torch.tensor(batch_embedding)
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
         x = self.dense(x)
