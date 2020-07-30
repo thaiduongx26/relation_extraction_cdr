@@ -446,7 +446,7 @@ class ElectraModelClassificationALPS(ElectraPreTrainedModel):
                     entity_embedding = torch.cat((chemical_embedding, disease_embedding), 0)
 
                 batch_embedding.append(entity_embedding.tolist())
-                print('batch: ', batch_embedding.shape)
+                print('batch: ', len(batch_embedding))
         batch_embedding = torch.tensor(batch_embedding).cuda()
         sequence_output_cls = batch_embedding
         x = self.dropout(sequence_output_cls)
