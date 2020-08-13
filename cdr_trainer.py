@@ -470,3 +470,4 @@ def train_ner(num_epochs=100, use_entity_token=False):
 
 if __name__ == '__main__':
     train_sentence(num_epochs=1000, use_entity_token=True)
+
