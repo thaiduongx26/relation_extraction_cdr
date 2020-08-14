@@ -318,6 +318,8 @@ class CDR_Sample():
             if len(text_tokenized) > 512:
                 print("text is too long!!!!")
                 continue
+            print("new_text: ", new_text)
+            print("text_tokenized: ", text_tokenized)
             ids = 0
             entity_check = 0
             while ids < len(text_tokenized):
