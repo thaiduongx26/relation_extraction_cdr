@@ -316,6 +316,7 @@ class CDR_Sample():
 
             text_tokenized = self.tokenize.encode(new_text)
             if len(text_tokenized) > 512:
+                print("text is too long!!!!")
                 continue
             ids = 0
             entity_check = 0
@@ -597,7 +598,6 @@ def make_cdr_non_global_dataset(path, use_entity_token=False, batch_size=16, shu
     for text_block in data_raw_sample:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         final_sample = sample.make_example_non_global(use_entity_token=use_entity_token, extract_type=extract_type)
-        print("final_sample: ", final_sample)
         data += final_sample
     print("data: ", data)
     1/0
