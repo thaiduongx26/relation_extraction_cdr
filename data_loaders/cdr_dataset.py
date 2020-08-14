@@ -223,9 +223,6 @@ class CDR_Sample():
         text = self.text
         chemical_code_list = self.get_list_code_by_type(type='Gene')
         disease_code_list = self.get_list_code_by_type(type='Disease')
-        print("self.entities_list_text: ", self.entities_list_text)
-        print("entities_list: ", self.entities_list)
-        print("chemical_code_list: ", chemical_code_list)
         # TODO: FILTER HYPERNYM HERES
         pos_doc_examples = copy.deepcopy(self.correct_answers)
         pos_e2_examples = [(pos_node, pe) for pe in pos_doc_examples for pos_node in ent_tree_map[pe[1]]]
@@ -264,7 +261,7 @@ class CDR_Sample():
                                                                                  self.entities, self.entities_list,
                                                                                  self.correct_answers,
                                                                                  extract_inter=extract_inter)
-                print("data: ", data)
+                print("----- data: ", data)
                 if data != None:
                     if intra_check:
                         final_sample_intra.append(data)
@@ -272,7 +269,8 @@ class CDR_Sample():
                         final_sample_inter.append(data)
                     elif not extract_inter:
                         global_sample.append(data)
-
+        print("++++ final_sample_intra: ", final_sample_intra)
+        print("++++ final_sample_inter: ", final_sample_inter)
         return final_sample_intra, final_sample_inter, global_sample
 
     def make_example_non_global(self, use_entity_token: bool = True, extract_type: str = 'inter'):
