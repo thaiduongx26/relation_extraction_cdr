@@ -27,18 +27,20 @@ def load_abstract(file):
         if len(line.strip()) == 0:
             if not current_sample:
                 continue
-            assert current_sample['abstract']
+            assert len(current_sample['abstract']) > 0
             assert not is_index
+            current_sample['abstract'] = ' '.join(current_sample['abstract'])
             abstracts.append(current_sample)
             current_sample = None
             is_index = True
         elif is_index:
             assert len(line.strip().split()) == 1, line
             assert not current_sample
-            current_sample = {'id': line.strip(), 'abstract': None}
+            current_sample = {'id': line.strip(), 'abstract': []}
             is_index = False
         else:
-            current_sample['abstract'] = line.strip()
+            current_sample['abstract'].append(line.strip())
+
     return abstracts
 
 
@@ -47,6 +49,8 @@ def load_anns(file):
         lines = f.readlines()
     anns = {}
     current_ann = None
+    gen_se = []
+    dis_se = []
     for line in lines:
         if len(line.strip()) == 0:
             continue
@@ -62,8 +66,20 @@ def load_anns(file):
             # assert int(e) - int(s) == len(' '.join(entity)), f"{s}, {e}, {len(' '.join(entity))}, {id}, {' '.join(entity)}"
             entity = {'start': s, 'end': e, 'text': ' '.join(entity), 'type': type, 'entity_id': e_id}
             if id not in anns:
+                gen_se = []
+                dis_se = []
                 anns[id] = []
-            anns[id].append(entity)
+            if (type == 'Gene' and ((s, e) in dis_se)) or (type == 'Disease' and ((s, e) in gen_se)):
+                print(f"ignore: type {type}, entity {entity}")
+                continue
+            else:
+                anns[id].append(entity)
+                if type == 'Gene':
+                    gen_se.append((s, e))
+                    # 1/0
+                else:
+                    # 1/0
+                    dis_se.append((s, e))
     return anns
 
 
@@ -87,15 +103,14 @@ def write_cdr_file(abstracts, anns, labels, file):
     with open(file, 'w') as f:
         for abstract in abstracts:
             id = abstract['id']
-            f.write(id + '|a|' + abstract['abstract']+'\n')
+            f.write(id + '|a|' + abstract['abstract'] + '\n')
             ann = anns[id]
             for entity in ann:
                 f.write(id + '\t' + entity['start'] + '\t' + entity['end'] + '\t' + entity['text'] + '\t' + entity[
                     'type'] + '\t' + entity['entity_id'] + '\n')
             for label in labels[id]:
-                f.write(id + '\t' + 'CID' + '\t' + label['geneId'] + '\t' + label['diseaseId']+'\n')
+                f.write(id + '\t' + 'CID' + '\t' + label['geneId'] + '\t' + label['diseaseId'] + '\n')
             f.write('\n')
-
 
 
 if __name__ == '__main__':
@@ -107,6 +122,6 @@ if __name__ == '__main__':
     labels = load_labels(labels_file)
     assert len(labels) == len(abstracts)
     assert len(abstracts) == len(anns)
-    file ='D:\\relation_extraction_cdr\\data\\GDA\\gda2cda/test.txt'
+    file = 'D:\\relation_extraction_cdr\\data\\GDA\\gda2cda/test.txt'
     write_cdr_file(abstracts, anns, labels, file)
     print("anns: ", anns.keys())

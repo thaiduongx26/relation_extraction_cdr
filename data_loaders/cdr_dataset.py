@@ -353,7 +353,6 @@ class CDR_Sample():
                     entity_check += 1
                     ids += 1
 
-            print('masked_entities: ', masked_entities)
 
 
             if not use_entity_token:
@@ -363,7 +362,11 @@ class CDR_Sample():
                 print('Ops ! Something wrong, len of masked_entities is {}, while len of text_tokenized is {}'.format(
                     len(masked_entities), len(text_tokenized)))
             le = preprocessing.LabelEncoder()
-            masked_entities = le.fit_transform(masked_entities)
+            try:
+                masked_entities = le.fit_transform(masked_entities)
+            except:
+                print("error: ", masked_entities)
+                continue
 
             re_sample['entity_chemical'] = le.transform([re_sample['entity_chemical']])[0]
             re_sample['entity_disease'] = le.transform([re_sample['entity_disease']])[0]
