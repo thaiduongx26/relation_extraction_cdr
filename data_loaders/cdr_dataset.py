@@ -279,6 +279,8 @@ class CDR_Sample():
         chemical_code_list = self.get_list_code_by_type(type='Chemical')
         disease_code_list = self.get_list_code_by_type(type='Disease')
         data_intra, data_inter, _ = self.extract_intra_inter_sentence(extract_inter=True)
+        print("data_intra: ", data_intra)
+        1/0
         e_start_ids = self.tokenize.convert_tokens_to_ids('[e]')
         e_end_ids = self.tokenize.convert_tokens_to_ids('[/e]')
 
