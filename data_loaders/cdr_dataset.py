@@ -223,6 +223,7 @@ class CDR_Sample():
         text = self.text
         chemical_code_list = self.get_list_code_by_type(type='gene')
         disease_code_list = self.get_list_code_by_type(type='Disease')
+        print("text: ", text)
         print("chemical_code_list: ", chemical_code_list)
         # TODO: FILTER HYPERNYM HERES
         pos_doc_examples = copy.deepcopy(self.correct_answers)
