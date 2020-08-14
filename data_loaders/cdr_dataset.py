@@ -221,7 +221,7 @@ class CDR_Sample():
         final_sample_inter = []
         global_sample = []
         text = self.text
-        chemical_code_list = self.get_list_code_by_type(type='Chemical')
+        chemical_code_list = self.get_list_code_by_type(type='gene')
         disease_code_list = self.get_list_code_by_type(type='Disease')
         print("chemical_code_list: ", chemical_code_list)
         # TODO: FILTER HYPERNYM HERES
