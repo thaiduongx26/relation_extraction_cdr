@@ -281,7 +281,7 @@ class CDR_Sample():
         chemical_code_list = self.get_list_code_by_type(type='Chemical')
         disease_code_list = self.get_list_code_by_type(type='Disease')
         data_intra, data_inter, _ = self.extract_intra_inter_sentence(extract_inter=True)
-        # print("data_intra: ", data_intra)
+        print("data_intra: ", data_intra)
         # 1/0
         e_start_ids = self.tokenize.convert_tokens_to_ids('[e]')
         e_end_ids = self.tokenize.convert_tokens_to_ids('[/e]')
@@ -361,16 +361,16 @@ class CDR_Sample():
                 print('Ops ! Something wrong, len of masked_entities is {}, while len of text_tokenized is {}'.format(
                     len(masked_entities), len(text_tokenized)))
             le = preprocessing.LabelEncoder()
-            try:
-                masked_entities = le.fit_transform(masked_entities)
-                re_sample['entity_chemical'] = le.transform([re_sample['entity_chemical']])[0]
-                re_sample['entity_disease'] = le.transform([re_sample['entity_disease']])[0]
-                re_sample['sentence_tokenized_ids'] = text_tokenized
-                re_sample['sentence_tokenized'] = self.tokenize.convert_ids_to_tokens(text_tokenized)
-                re_sample['masked_entities'] = masked_entities
-            except:
-                print("error: ", masked_entities)
-                continue
+            # try:
+            masked_entities = le.fit_transform(masked_entities)
+            re_sample['entity_chemical'] = le.transform([re_sample['entity_chemical']])[0]
+            re_sample['entity_disease'] = le.transform([re_sample['entity_disease']])[0]
+            re_sample['sentence_tokenized_ids'] = text_tokenized
+            re_sample['sentence_tokenized'] = self.tokenize.convert_ids_to_tokens(text_tokenized)
+            re_sample['masked_entities'] = masked_entities
+            # except:
+            #     print("error: ", masked_entities)
+            #     continue
             final_sample.append(re_sample)
 
         return final_sample
