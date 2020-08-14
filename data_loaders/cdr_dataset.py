@@ -594,11 +594,10 @@ def make_cdr_non_global_dataset(path, use_entity_token=False, batch_size=16, shu
     with open(path, 'r') as f:
         raw_data = f.readlines()
     data_raw_sample = gen_samples(raw_data)
-    print("data_raw_sample: ", data_raw_sample)
-    1/0
     for text_block in data_raw_sample:
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         final_sample = sample.make_example_non_global(use_entity_token=use_entity_token, extract_type=extract_type)
+        print("final_sample: ", final_sample)
         data += final_sample
     print("data: ", data)
     1/0
