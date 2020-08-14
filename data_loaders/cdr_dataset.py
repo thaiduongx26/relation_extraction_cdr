@@ -609,8 +609,6 @@ def make_cdr_non_global_dataset(path, use_entity_token=False, batch_size=16, shu
         sample = CDR_Sample(text_list=text_block, tokenize=tokenizer)
         final_sample = sample.make_example_non_global(use_entity_token=use_entity_token, extract_type=extract_type)
         data += final_sample
-    print("data: ", data)
-    1/0
     PS = PadSequenceCDRSentenceDataset(token_pad_value=tokenizer.pad_token_id)
     dataset = CDRIntraDataset(data)
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=0, collate_fn=PS,
