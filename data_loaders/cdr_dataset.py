@@ -221,7 +221,7 @@ class CDR_Sample():
         final_sample_inter = []
         global_sample = []
         text = self.text
-        chemical_code_list = self.get_list_code_by_type(type='gene')
+        chemical_code_list = self.get_list_code_by_type(type='Gene')
         disease_code_list = self.get_list_code_by_type(type='Disease')
         print("self.entities_list_text: ", self.entities_list_text)
         print("entities_list: ", self.entities_list)
