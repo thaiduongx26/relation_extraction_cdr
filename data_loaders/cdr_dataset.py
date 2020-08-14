@@ -288,6 +288,7 @@ class CDR_Sample():
             data = data_inter
 
         for sample in data:
+            print("sample: ", sample)
             re_sample = sample
             masked_entities = []
             chemical_start = int(sample['chemical_pos']['start']) - sample['sent_pos']
