@@ -292,7 +292,7 @@ class CDR_Sample():
             data = data_inter
 
         for sample in data:
-            # print("sample: ", sample)
+            print("sample: ", sample)
             re_sample = sample
             masked_entities = []
             chemical_start = int(sample['chemical_pos']['start']) - sample['sent_pos']
@@ -318,6 +318,7 @@ class CDR_Sample():
                                                                                                             chemical_end:]
                 first = sample['entity_chemical']
                 second = sample['entity_disease']
+
 
             text_tokenized = self.tokenize.encode(new_text)
             if len(text_tokenized) > 512:
@@ -353,6 +354,7 @@ class CDR_Sample():
                     ids += 1
 
             print('masked_entities: ', masked_entities)
+
 
             if not use_entity_token:
                 text_tokenized = list(filter(lambda a: a != e_start_ids and a != e_end_ids, text_tokenized))
