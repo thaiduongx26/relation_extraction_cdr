@@ -261,7 +261,7 @@ class CDR_Sample():
                                                                                  self.entities, self.entities_list,
                                                                                  self.correct_answers,
                                                                                  extract_inter=extract_inter)
-                print("----- data: ", data)
+                # print("----- data: ", data)
                 if data != None:
                     if intra_check:
                         final_sample_intra.append(data)
@@ -269,8 +269,8 @@ class CDR_Sample():
                         final_sample_inter.append(data)
                     elif not extract_inter:
                         global_sample.append(data)
-        print("++++ final_sample_intra: ", final_sample_intra)
-        print("++++ final_sample_inter: ", final_sample_inter)
+        # print("++++ final_sample_intra: ", final_sample_intra)
+        # print("++++ final_sample_inter: ", final_sample_inter)
         return final_sample_intra, final_sample_inter, global_sample
 
     def make_example_non_global(self, use_entity_token: bool = True, extract_type: str = 'inter'):
@@ -281,8 +281,8 @@ class CDR_Sample():
         chemical_code_list = self.get_list_code_by_type(type='Chemical')
         disease_code_list = self.get_list_code_by_type(type='Disease')
         data_intra, data_inter, _ = self.extract_intra_inter_sentence(extract_inter=True)
-        print("data_intra: ", data_intra)
-        1/0
+        # print("data_intra: ", data_intra)
+        # 1/0
         e_start_ids = self.tokenize.convert_tokens_to_ids('[e]')
         e_end_ids = self.tokenize.convert_tokens_to_ids('[/e]')
 
@@ -292,7 +292,7 @@ class CDR_Sample():
             data = data_inter
 
         for sample in data:
-            print("sample: ", sample)
+            # print("sample: ", sample)
             re_sample = sample
             masked_entities = []
             chemical_start = int(sample['chemical_pos']['start']) - sample['sent_pos']
@@ -323,8 +323,8 @@ class CDR_Sample():
             if len(text_tokenized) > 512:
                 print("text is too long!!!!")
                 continue
-            print("new_text: ", new_text)
-            print("text_tokenized: ", text_tokenized)
+            # print("new_text: ", new_text)
+            # print("text_tokenized: ", text_tokenized)
             ids = 0
             entity_check = 0
             while ids < len(text_tokenized):
