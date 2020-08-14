@@ -222,8 +222,8 @@ def train_sentence(num_epochs=100, use_entity_token=False):
     #                                                     dev_path='data/cdr/CDR_DevelopmentSet.PubTator.txt',
     #                                                     use_entity_token=use_entity_token, extract_type='intra',
     #                                                     batch_size=8)
-    _, train_loader = make_cdr_non_global_dataset('data/gda/train.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=8)
-    _, test_loader = make_cdr_non_global_dataset('data/cdr/CDR_TestSet.PubTator.txt', use_entity_token=use_entity_token,
+    _, train_loader = make_cdr_non_global_dataset('/home/levi/levi/relation_extraction_cdr/data/gda/train.txt', use_entity_token=use_entity_token, extract_type='intra', batch_size=8)
+    _, test_loader = make_cdr_non_global_dataset('/home/levi/levi/relation_extraction_cdr/data/gda/test.txt', use_entity_token=use_entity_token,
                                                  extract_type='intra', batch_size=8)
     # _, train_loader = make_cdr_non_global_dataset('data/cdr/CDR_TrainingSet.PubTator.txt', use_entity_token=use_entity_token, extract_type='inter')
 
