@@ -292,7 +292,6 @@ class CDR_Sample():
             data = data_inter
 
         for sample in data:
-            print("sample: ", sample)
             re_sample = sample
             masked_entities = []
             chemical_start = int(sample['chemical_pos']['start']) - sample['sent_pos']
@@ -364,15 +363,14 @@ class CDR_Sample():
             le = preprocessing.LabelEncoder()
             try:
                 masked_entities = le.fit_transform(masked_entities)
+                re_sample['entity_chemical'] = le.transform([re_sample['entity_chemical']])[0]
+                re_sample['entity_disease'] = le.transform([re_sample['entity_disease']])[0]
+                re_sample['sentence_tokenized_ids'] = text_tokenized
+                re_sample['sentence_tokenized'] = self.tokenize.convert_ids_to_tokens(text_tokenized)
+                re_sample['masked_entities'] = masked_entities
             except:
                 print("error: ", masked_entities)
                 continue
-
-            re_sample['entity_chemical'] = le.transform([re_sample['entity_chemical']])[0]
-            re_sample['entity_disease'] = le.transform([re_sample['entity_disease']])[0]
-            re_sample['sentence_tokenized_ids'] = text_tokenized
-            re_sample['sentence_tokenized'] = self.tokenize.convert_ids_to_tokens(text_tokenized)
-            re_sample['masked_entities'] = masked_entities
             final_sample.append(re_sample)
 
         return final_sample
