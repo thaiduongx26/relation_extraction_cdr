@@ -37,12 +37,13 @@ with codecs.open(mesh_file, 'r', encoding='utf-8') as f:
 class CDR_Sample():
     def __init__(self, text_list: List, tokenize):
         self.tokenize = tokenize
-        self.title = text_list[0].split('|')[-1]
-        self.content = text_list[1].split('|')[-1]
-        self.text = self.title + self.content
+        # self.title = text_list[0].split('|')[-1]
+        self.content = text_list[0].split('|')[-1]
+        # self.text = self.title + self.content
+        self.text = self.content
         self.text = self.text.lower()
-        self.entities_list_text = [text_list[i] for i in range(2, len(text_list)) if 'CID' not in text_list[i]]
-        self.ca_list_text = [text_list[i] for i in range(2, len(text_list)) if 'CID' in text_list[i]]
+        self.entities_list_text = [text_list[i] for i in range(1, len(text_list)) if 'CID' not in text_list[i]]
+        self.ca_list_text = [text_list[i] for i in range(1, len(text_list)) if 'CID' in text_list[i]]
         self.entities_list = {}
         self.entities = {}
         self.correct_answers = []
