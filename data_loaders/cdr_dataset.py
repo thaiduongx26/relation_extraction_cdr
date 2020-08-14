@@ -223,6 +223,7 @@ class CDR_Sample():
         text = self.text
         chemical_code_list = self.get_list_code_by_type(type='Chemical')
         disease_code_list = self.get_list_code_by_type(type='Disease')
+        print("chemical_code_list: ", chemical_code_list)
         # TODO: FILTER HYPERNYM HERES
         pos_doc_examples = copy.deepcopy(self.correct_answers)
         pos_e2_examples = [(pos_node, pe) for pe in pos_doc_examples for pos_node in ent_tree_map[pe[1]]]
@@ -261,6 +262,7 @@ class CDR_Sample():
                                                                                  self.entities, self.entities_list,
                                                                                  self.correct_answers,
                                                                                  extract_inter=extract_inter)
+                print("data: ", data)
                 if data != None:
                     if intra_check:
                         final_sample_intra.append(data)
