@@ -42,8 +42,8 @@ class CDR_Sample():
         # self.text = self.title + self.content
         self.text = self.content
         self.text = self.text.lower()
-        self.entities_list_text = [text_list[i] for i in range(1, len(text_list)) if 'CID' not in text_list[i]]
-        self.ca_list_text = [text_list[i] for i in range(1, len(text_list)) if 'CID' in text_list[i]]
+        self.entities_list_text = [text_list[i] for i in range(1, len(text_list)) if text_list[i].lower().strip().split()[1] != 'cid']
+        self.ca_list_text = [text_list[i] for i in range(1, len(text_list)) if text_list[i].lower().strip().split()[1] != 'cid']
         self.entities_list = {}
         self.entities = {}
         self.correct_answers = []
